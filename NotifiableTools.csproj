@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- アプリのIcon設定 -->
+  <PropertyGroup>
+    <ApplicationIcon>asset/icon1.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <!-- リソース埋め込み -->
+  <ItemGroup>
+    <EmbeddedResource Include="asset/icon1.ico" LogicalName="app_icon" />
+  </ItemGroup>
+
+</Project>
