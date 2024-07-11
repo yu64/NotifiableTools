@@ -14,10 +14,10 @@ namespace NotifiableTools;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class ToolBar : Window
+public partial class ToolBarController : Window
 {
-    public ToolBar()
+    public ToolBarController()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 }

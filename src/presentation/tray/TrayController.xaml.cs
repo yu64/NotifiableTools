@@ -1,22 +1,31 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Reflection;
-using System.Windows;
+﻿using System.Windows;
 
 namespace NotifiableTools;
 
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
-public partial class App : System.Windows.Application
+public partial class TrayController : System.Windows.Application
 {
+    private readonly Usecase usecase;
+
+    private readonly Func<ToolBarController> toolbarFactory;
+
     
+
+    public TrayController(
+        Usecase usecase,
+        Func<ToolBarController> toolbarFactory
+    )
+    {
+        this.usecase = usecase;
+        this.toolbarFactory = toolbarFactory;
+        this.InitializeComponent();
+    }
     
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        e.Args.ToList().ForEach(Console.WriteLine);
 
         //アプリのアイコン
         var appIcon = AssetEnum.APP_ICON.Create((s) => new Icon(s));
@@ -35,6 +44,7 @@ public partial class App : System.Windows.Application
         };
         //notifyIcon.MouseClick += new MouseEventHandler();
 
+        
     }
 }
 

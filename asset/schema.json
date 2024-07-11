@@ -1,0 +1,94 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Welcome9",
+    "definitions": {
+        "Welcome9": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Rule"
+                    }
+                }
+            },
+            "required": [
+                "rules"
+            ],
+            "title": "Welcome9"
+        },
+        "Rule": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "when": {
+                    "$ref": "#/definitions/When"
+                }
+            },
+            "required": [
+                "name",
+                "when"
+            ],
+            "title": "Rule"
+        },
+        "When": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "target": {
+                    "$ref": "#/definitions/Target"
+                }
+            },
+            "required": [
+                "target",
+                "type"
+            ],
+            "title": "When"
+        },
+        "Target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "src": {
+                    "$ref": "#/definitions/Src"
+                }
+            },
+            "required": [
+                "name",
+                "src",
+                "type"
+            ],
+            "title": "Target"
+        },
+        "Src": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title",
+                "type"
+            ],
+            "title": "Src"
+        }
+    }
+}

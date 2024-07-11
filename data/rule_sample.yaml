@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../asset/schema.json
+
+# 1. 特定のウィンドウがフォーカスされた場合
+# {
+#   type: "isFocus"
+#   target: {
+#     type: "window",
+#     title: "Chrome"
+#   }
+# }
+
+# 2. 特定のウィンドウの特定のUI要素がフォーカスされた場合
+# {
+#   type: "isFocus"
+#   target: {
+#     type: "ui"
+#     window: {
+#       type: "window",
+#       title: "Chrome"
+#     }
+#   }
+# }
+
+# 3. 特定のプロセスが動いている場合
+# 4. 特定のサービスが動いている場合
+# 5. 特定のウィンドウが存在する場合
+
+
+rules:
+  - name: "name"
+    when: 
+      type: $or
+      args:
+        - type: "ui"
+          target:
+            type: "btn"
+            name: "Chrome"
+            src:
+              type: "Chrome"
+
+          
+
+
+
+# rules:
+#   - name: "Rule1"
+#     when: 
+
+#       type: "isFocus"
+#       target:
+#         type: "ui"
+#         name: "btn"
+#         src:
+#           type: window
+#           title: "Chrome"
+      
+      
+
+
+      
+
+
+

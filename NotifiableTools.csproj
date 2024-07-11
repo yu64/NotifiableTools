@@ -20,4 +20,13 @@
     <EmbeddedResource Include="asset/icon1.ico" LogicalName="app_icon" />
   </ItemGroup>
 
+  <!-- ライブラリ -->
+  <ItemGroup>
+    <PackageReference Include="FlaUI.UIA3" Version="4.0.0" />
+    <PackageReference Include="NJsonSchema" Version="11.0.1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="YamlDotNet" Version="15.3.0" />
+  </ItemGroup>
+
 </Project>

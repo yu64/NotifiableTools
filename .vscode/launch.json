@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": "[command] help",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -16,9 +16,26 @@
             "stopAtEntry": false
         },
         {
-            "name": ".NET Core Attach",
+            "name": "[command] template",
             "type": "coreclr",
-            "request": "attach"
-        }
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/net6.0-windows/NotifiableTools.dll",
+            "args": ["template", "--output", "./temp"],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "[command] start",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/net6.0-windows/NotifiableTools.dll",
+            "args": ["start"],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
     ]
 }
