@@ -1,9 +1,7 @@
 
 using System.Diagnostics;
 using System.Text.Json;
-using Newtonsoft.Json.Serialization;
-using NJsonSchema;
-using NJsonSchema.Generation;
+using Json.Schema.Generation;
 
 namespace NotifiableTools;
 

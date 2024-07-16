@@ -3,8 +3,6 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.NamingConventionBinder;
 using System.IO;
-using System.Text.Json;
-using NJsonSchema.Generation;
 
 namespace NotifiableTools;
 

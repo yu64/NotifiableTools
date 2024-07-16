@@ -1,7 +1,9 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using NJsonSchema.Generation;
+using Json.More;
+using Json.Schema;
+using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
@@ -15,21 +17,17 @@ public class RuleParser
 
     public string GenerateJsonSchema()
     {
-        var settings = new SystemTextJsonSchemaGeneratorSettings
+        var builder = new JsonSchemaBuilder();
+        var config = new SchemaGeneratorConfiguration()
         {
-            SerializerOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true,
-                Converters = {
-                    new JsonStringEnumConverter()
-                }
-            }
+            Optimize = true,
+            Refiners = { new SubTypeRefiner() }
         };
-        
-        var generator = new JsonSchemaGenerator(settings);
-        var schema = generator.Generate(typeof(RuleSet));
-        return schema.ToJson();
+
+        var schema = builder.FromType<RuleSet>(config).Build();
+
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        return JsonSerializer.Serialize(schema, options);
     }
 
     public string GenerateYamlSample(string sampleToSchemaPath)

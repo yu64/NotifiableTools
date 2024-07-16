@@ -8,15 +8,15 @@ using System.Runtime.Serialization;
 namespace NotifiableTools;
 
 
-public record struct Rule
+public readonly record struct Rule
 {
     [Required]
     public readonly string Name { get; }
 
     [Required]
-    public readonly ICondition Condition { get; }
+    public readonly Condition Condition { get; }
 
-    public Rule(string name, ICondition condition)
+    public Rule(string name, Condition condition)
     {
         this.Name = name;
         this.Condition = condition;
