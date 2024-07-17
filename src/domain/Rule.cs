@@ -1,26 +1,49 @@
-
-
-
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
+using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
 
-public readonly record struct Rule
+public record class Rule
 {
     [Required]
-    public readonly string Name { get; }
+    public string Name { get; }
 
     [Required]
-    public readonly Condition Condition { get; }
+    public IBoolFunction Condition { get; }
 
-    public Rule(string name, Condition condition)
+    public Rule(string name, IBoolFunction condition)
     {
         this.Name = name;
         this.Condition = condition;
     }
 
 
+}
+
+
+public class LoopA
+{
+    public LoopB next;
+}
+
+public class LoopB
+{
+    public LoopC next;
+}
+
+public class LoopC
+{
+    public LoopA next;
+}
+
+[AllSubType]
+public class SubTypeA
+{
+
+}
+
+[AllSubType]
+public class SubTypeB : SubTypeA
+{
+    public SubTypeA sub;
 }

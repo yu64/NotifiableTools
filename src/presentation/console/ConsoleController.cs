@@ -100,10 +100,14 @@ public class ConsoleController
     {
         return ExceptionUtil.TryCatch(0, 1, () => {
 
-            
+            var rules = rulePaths
+                .Select((path) => this.parser.ParseFromFile(path))
+                .Aggregate((a, b) => a.Merge(b));
+
+            System.Console.WriteLine(rules);
             
             //タスクトレイにアイコンを追加
-            this.trayFactory().Run();
+            //this.trayFactory().Run();
         });
 
     }

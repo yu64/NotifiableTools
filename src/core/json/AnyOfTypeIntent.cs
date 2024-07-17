@@ -1,18 +1,25 @@
+using System.Diagnostics;
 using Json.Schema;
 using Json.Schema.Generation;
 
-internal class AnyOfTypeIntent(IEnumerable<SchemaGenerationContextBase> contexts) : ISchemaKeywordIntent, IContextContainer
+internal class AnyOfTypeIntent: ISchemaKeywordIntent, IContextContainer
 {
-    private IEnumerable<SchemaGenerationContextBase> contexts = contexts;
+    private IEnumerable<SchemaGenerationContextBase> contexts;
+
+    public AnyOfTypeIntent(IEnumerable<SchemaGenerationContextBase> contexts) 
+    {
+        this.contexts = contexts.Select((c) => {
+            c.ReferenceCount++;
+            return c;
+        });
+    }
 
     public void Apply(JsonSchemaBuilder builder)
 	{
 		builder.AnyOf(this.contexts.Select((c) => {
 
-            var subBuilder = new JsonSchemaBuilder();
-            c.Apply(subBuilder);
-            return (JsonSchema)subBuilder;
-        }));
+            return c.Apply();
+        }).ToArray());
 	}
 
     public void Replace(int hashCode, SchemaGenerationContextBase newContext)

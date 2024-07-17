@@ -2,9 +2,7 @@
 
 
 using System.Collections.Immutable;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
+using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
@@ -19,5 +17,9 @@ public record struct RuleSet
         this.Rules = Rules;
     }
 
-
+    public RuleSet Merge(RuleSet left)
+    {
+        var rules = this.Rules.Concat(left.Rules);
+        return new RuleSet(ImmutableList.CreateRange(rules));
+    }
 }
