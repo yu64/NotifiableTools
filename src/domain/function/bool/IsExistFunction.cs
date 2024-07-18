@@ -7,10 +7,6 @@ namespace NotifiableTools;
 public class IsExistFunction : IBoolFunction
 {
     [Required]
-    [Const(nameof(IsExistFunction))]
-    public string Type => nameof(IsExistFunction);
-
-    [Required]
     public required IAnyFunction Target;
 
     public bool Call()

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Json.Schema.Generation;
 
 namespace NotifiableTools;
@@ -11,6 +12,7 @@ public record class Rule
     [Required]
     public IBoolFunction Condition { get; }
 
+    [JsonConstructor]
     public Rule(string name, IBoolFunction condition)
     {
         this.Name = name;

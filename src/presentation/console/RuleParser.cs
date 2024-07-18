@@ -72,8 +72,10 @@ public class RuleParser
 
     public RuleSet ParseFromJson(string json)
     {
-        var result = this.GenerateJsonSchemaObj().Evaluate(json);
-        //var options = new JsonSerializerOptions { WriteIndented = true };
+        var options = new JsonSerializerOptions() 
+        { 
+            WriteIndented = true
+        };
         return JsonSerializer.Deserialize<RuleSet>(json);
     }
 

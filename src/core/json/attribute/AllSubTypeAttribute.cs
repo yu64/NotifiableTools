@@ -7,8 +7,8 @@ using Json.Schema.Generation.Intents;
 
 namespace NotifiableTools;
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, Inherited=false)]
-public class AllSubTypeAttribute : Attribute, IAttributeHandler
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, Inherited=true)]
+public class AllSubTypeAttribute : Attribute
 {
 
     public AllSubTypeAttribute()
@@ -18,7 +18,7 @@ public class AllSubTypeAttribute : Attribute, IAttributeHandler
 
     public Type[] findAllSubType(Type superType)
     {
-        var types = System.Reflection.Assembly.GetAssembly(typeof(SubTypeAttribute))
+        var types = System.Reflection.Assembly.GetAssembly(typeof(AllSubTypeAttribute))
             ?.GetTypes()
             .Where(sub => sub.IsSubclassOf(superType) || sub.GetInterfaces().Contains(superType))
             .Where(sub => !sub.IsAbstract)
@@ -26,11 +26,5 @@ public class AllSubTypeAttribute : Attribute, IAttributeHandler
             ;
 
         return types;
-    }
-
-    public void AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
-    {
-        // var subtypes = this.findAllSubType(context.Type);
-        // var subContexts = subtypes.Select((t) => SchemaGenerationContextCache.Get(t));
     }
 }

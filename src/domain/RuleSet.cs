@@ -2,18 +2,21 @@
 
 
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
 
-public record struct RuleSet
+public readonly record struct RuleSet
 {
     [Required]
-    public readonly ImmutableList<Rule> Rules { get; }
+    public ImmutableList<Rule> Rules { get; }
 
+    [JsonConstructor]
     public RuleSet(ImmutableList<Rule> Rules)
     {
+        System.Console.WriteLine("インスタンス");
         this.Rules = Rules;
     }
 

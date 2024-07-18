@@ -1,15 +1,14 @@
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 using FlaUI.Core.AutomationElements;
 using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
-
 [AllSubType()]
 public interface IAnyFunction
 {
-    [Required]
-    public string Type { get; }
+    
 }
 
 [AllSubType()]

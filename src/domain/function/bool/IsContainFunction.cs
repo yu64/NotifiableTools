@@ -6,11 +6,6 @@ namespace NotifiableTools;
 public class IsContainFunction : IBoolFunction
 {
     [Required]
-    [Const(nameof(IsContainFunction))]
-    public string Type => nameof(IsContainFunction);
-
-
-    [Required]
     public required string All;
     
     [Required]
