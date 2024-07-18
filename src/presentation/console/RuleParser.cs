@@ -74,7 +74,10 @@ public class RuleParser
     {
         var options = new JsonSerializerOptions() 
         { 
-            WriteIndented = true
+            WriteIndented = true,
+            Converters = {
+                new SubTypeConverter<IBoolFunction>()
+            }
         };
         return JsonSerializer.Deserialize<RuleSet>(json);
     }
