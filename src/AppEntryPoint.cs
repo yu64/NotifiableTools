@@ -12,7 +12,8 @@ public class AppEntryPoint
     {
 
         var console = new ConsoleController(
-            () => new TrayController(
+            (rules) => new TrayController(
+                rules,
                 new Usecase(), 
                 () => new ToolBarController()
             ),

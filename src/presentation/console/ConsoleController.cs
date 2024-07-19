@@ -8,15 +8,14 @@ namespace NotifiableTools;
 
 public class ConsoleController
 {   
-    private readonly Func<TrayController> trayFactory;
+    private readonly Func<RuleSet, TrayController> trayFactory;
     private readonly RuleParser parser;
-
     private readonly RootCommand root;
 
 
 
     public ConsoleController(
-        Func<TrayController> trayFactory,
+        Func<RuleSet, TrayController> trayFactory,
         RuleParser parser
     )
     {
@@ -48,7 +47,7 @@ public class ConsoleController
 
         //オプション
         Option<string> output = new Option<string>(
-            aliases: new string[] {"--output", "-o"}, 
+            aliases: ["--output", "-o"], 
             description: "出力先フォルダ",
             getDefaultValue: () => Directory.GetCurrentDirectory()
         );
@@ -99,20 +98,14 @@ public class ConsoleController
     public int StartApp(string[] rulePaths)
     {
         return ExceptionUtil.TryCatch(0, 1, () => {
-
+            
+            //ルールを読み込む
             var rules = rulePaths
                 .Select((path) => this.parser.ParseFromFile(path))
                 .Aggregate((a, b) => a.Merge(b));
 
-            System.Console.WriteLine(rules);
-
-            var task = rules.Rules[0].Condition.Call();
-            while(!task.IsCompleted);
-            
-            System.Console.WriteLine(task.Result);
-            
             //タスクトレイにアイコンを追加
-            //this.trayFactory().Run();
+            this.trayFactory(rules).Run();
         });
 
     }
