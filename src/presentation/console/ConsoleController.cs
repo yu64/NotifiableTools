@@ -105,6 +105,11 @@ public class ConsoleController
                 .Aggregate((a, b) => a.Merge(b));
 
             System.Console.WriteLine(rules);
+
+            var task = rules.Rules[0].Condition.Call();
+            while(!task.IsCompleted);
+            
+            System.Console.WriteLine(task.Result);
             
             //タスクトレイにアイコンを追加
             //this.trayFactory().Run();

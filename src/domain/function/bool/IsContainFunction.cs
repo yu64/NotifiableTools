@@ -20,8 +20,9 @@ public readonly record struct IsContainFunction : IBoolFunction
         Part = part;
     }
 
-    public bool Call()
+    public Task<bool> Call()
     {
-        return this.All.Contains(this.Part);
+        return Task.FromResult(this.All.Contains(this.Part));
     }
+
 }

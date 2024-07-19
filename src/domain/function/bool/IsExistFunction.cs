@@ -18,9 +18,8 @@ public readonly record struct IsExistFunction : IBoolFunction
     }
     
 
-    public bool Call()
-    {
-        ICallableFunction<dynamic> callable = (ICallableFunction<dynamic>)Target;
-        return (callable?.Call() != null);
+    public async Task<bool> Call()
+    {   
+        return (await this.Target.Call<dynamic>()) != null;
     }
 }

@@ -17,8 +17,8 @@ public readonly record struct NotFunction : IBoolFunction
     }
 
 
-    public bool Call()
+    public async Task<bool> Call()
     {
-        return !Target.Call();
+        return !await Target.Call();
     }
 }

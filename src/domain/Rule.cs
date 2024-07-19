@@ -10,10 +10,10 @@ public readonly record struct Rule
     public string Name { get; }
 
     [Required]
-    public IAnyFunction Condition { get; }
+    public IBoolFunction Condition { get; }
 
     [JsonConstructor]
-    public Rule(string name, IAnyFunction condition)
+    public Rule(string name, IBoolFunction condition)
     {
         this.Name = name;
         this.Condition = condition;
