@@ -14,9 +14,22 @@ namespace NotifiableTools;
 public class RuleParser
 {
 
+    private readonly JsonSerializerOptions serializerOptions;
+
     public RuleParser()
     {
-
+        Type? GetTypeFromSimpleName(String typeName)
+        {
+            return Type.GetType($"{this.GetType().Namespace}.{typeName}");
+        }
+        
+        this.serializerOptions = new JsonSerializerOptions() 
+        { 
+            WriteIndented = true,
+            Converters = {
+                new SubTypeConverter<IAnyFunction>(GetTypeFromSimpleName)
+            }
+        };
     }
 
     public JsonSchema GenerateJsonSchemaObj()
@@ -34,8 +47,7 @@ public class RuleParser
 
     public string GenerateJsonSchema()
     {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        return JsonSerializer.Serialize(this.GenerateJsonSchemaObj(), options);
+        return JsonSerializer.Serialize(this.GenerateJsonSchemaObj(), this.serializerOptions);
     }
 
     public string GenerateYamlSample(string sampleToSchemaPath)
@@ -72,14 +84,7 @@ public class RuleParser
 
     public RuleSet ParseFromJson(string json)
     {
-        var options = new JsonSerializerOptions() 
-        { 
-            WriteIndented = true,
-            Converters = {
-                new SubTypeConverter<IBoolFunction>()
-            }
-        };
-        return JsonSerializer.Deserialize<RuleSet>(json);
+        return JsonSerializer.Deserialize<RuleSet>(json, this.serializerOptions);
     }
 
 

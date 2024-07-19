@@ -4,10 +4,19 @@ using Json.Schema.Generation;
 namespace NotifiableTools;
 
 
-public class IsExistFunction : IBoolFunction
+public readonly record struct IsExistFunction : IBoolFunction
 {
     [Required]
-    public required IAnyFunction Target;
+    public IAnyFunction Target { get; }
+
+    
+
+    [JsonConstructor]
+    public IsExistFunction(IAnyFunction target)
+    {
+        Target = target;
+    }
+    
 
     public bool Call()
     {

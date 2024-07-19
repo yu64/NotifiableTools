@@ -1,15 +1,24 @@
+using System.Text.Json.Serialization;
 using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
 
-public class IsContainFunction : IBoolFunction
+public readonly record struct IsContainFunction : IBoolFunction
 {
+
     [Required]
-    public required string All;
+    public string All { get; }
     
     [Required]
-    public required string Part;
+    public string Part { get; }
+
+    [JsonConstructor]
+    public IsContainFunction(string all, string part)
+    {
+        All = all;
+        Part = part;
+    }
 
     public bool Call()
     {

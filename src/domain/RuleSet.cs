@@ -16,7 +16,6 @@ public readonly record struct RuleSet
     [JsonConstructor]
     public RuleSet(ImmutableList<Rule> Rules)
     {
-        System.Console.WriteLine("インスタンス");
         this.Rules = Rules;
     }
 

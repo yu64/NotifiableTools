@@ -4,16 +4,16 @@ using Json.Schema.Generation;
 namespace NotifiableTools;
 
 
-public record class Rule
+public readonly record struct Rule
 {
     [Required]
     public string Name { get; }
 
     [Required]
-    public IBoolFunction Condition { get; }
+    public IAnyFunction Condition { get; }
 
     [JsonConstructor]
-    public Rule(string name, IBoolFunction condition)
+    public Rule(string name, IAnyFunction condition)
     {
         this.Name = name;
         this.Condition = condition;
@@ -23,29 +23,3 @@ public record class Rule
 }
 
 
-public class LoopA
-{
-    public LoopB next;
-}
-
-public class LoopB
-{
-    public LoopC next;
-}
-
-public class LoopC
-{
-    public LoopA next;
-}
-
-[AllSubType]
-public class SubTypeA
-{
-
-}
-
-[AllSubType]
-public class SubTypeB : SubTypeA
-{
-    public SubTypeA sub;
-}
