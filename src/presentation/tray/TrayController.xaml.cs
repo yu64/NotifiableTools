@@ -57,8 +57,8 @@ public partial class TrayController : System.Windows.Application
         //ルールの状態監視を開始
         this.observerCts = this.usecase.ObserveRule(
             this.rules,
-            (rule) => {System.Console.WriteLine($"e {rule.Name}");},
-            (rule) => {System.Console.WriteLine($"d {rule.Name}");}
+            this.EnableActionUi,
+            this.DisableActionUi
         );
 
     }
@@ -67,6 +67,15 @@ public partial class TrayController : System.Windows.Application
     {
         this.Shutdown();
         this.observerCts.Cancel();
+    }
+
+    private void EnableActionUi(Rule rule)
+    {
+        System.Console.WriteLine($"enable {rule.Name}");
+    }
+    private void DisableActionUi(Rule rule)
+    {
+        System.Console.WriteLine($"disable {rule.Name}");
     }
 
     private void OnClickTrayIcon(object? sender, MouseEventArgs e)
