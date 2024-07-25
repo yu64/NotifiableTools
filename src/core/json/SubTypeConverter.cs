@@ -11,7 +11,7 @@ public class SubTypeConverter<TSuper> : JsonConverter<TSuper>
     private readonly Func<string, Type?> getType;
     private readonly string typePropertyName;
 
-    public SubTypeConverter(Func<string, Type?> getType, String typePropertyName = "$type")
+    public SubTypeConverter(Func<string, Type?> getType, string typePropertyName = "$type")
     {
         this.getType = getType;
         this.typePropertyName = typePropertyName;
@@ -19,6 +19,13 @@ public class SubTypeConverter<TSuper> : JsonConverter<TSuper>
 
     public override bool CanConvert(Type typeToConvert)
     {
+        //出力クラスとして扱えない場合、除外
+        if(!typeof(TSuper).IsAssignableFrom(typeToConvert))
+        {
+            return false;
+        }
+
+
         //インスタンス化可能である場合、除外
         if(!typeToConvert.IsAbstract && !typeToConvert.IsInterface)
         {

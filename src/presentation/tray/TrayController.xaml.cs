@@ -1,24 +1,33 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 namespace NotifiableTools;
 
 
 public partial class TrayController : System.Windows.Application
 {
+    //依存関係の注入
+
     private readonly RuleSet rules;
     private readonly Usecase usecase;
-    private readonly Func<ToolBarController> toolbarFactory;
+    private readonly Func<Action, ActionUiController> actionUiFactory;
+
+
+    private CancellationTokenSource observerCts;
+    private NotifyIcon trayIcon;
+
+
 
 
     public TrayController(
         RuleSet rules, 
         Usecase usecase,
-        Func<ToolBarController> toolbarFactory
+        Func<Action, ActionUiController> actionUiFactory
     )
     {
         this.rules = rules;
         this.usecase = usecase;
-        this.toolbarFactory = toolbarFactory;
+        this.actionUiFactory = actionUiFactory;
         this.InitializeComponent();
     }
 
@@ -27,25 +36,41 @@ public partial class TrayController : System.Windows.Application
     {
         base.OnStartup(e);
 
-        e.Args.ToList().ForEach(Console.WriteLine);
-
         //アプリのアイコン
         var appIcon = AssetEnum.APP_ICON.Create((s) => new Icon(s));
 
         
         var contextMenu = new ContextMenuStrip();
-        contextMenu.Items.Add("終了", null, (_, _) => this.Shutdown());
+        contextMenu.Items.Add("終了", null, (_, _) => this.StopApp());
 
-
-        var notifyIcon = new NotifyIcon()
+        //トレイアイコンを作成
+        this.trayIcon = new NotifyIcon()
         {
             Visible = true,
             Icon = appIcon,
             Text = "タスクトレイ常駐アプリのテストです",
             ContextMenuStrip = contextMenu
         };
-        //notifyIcon.MouseClick += new MouseEventHandler();
+        //this.trayIcon.MouseClick += this.OnClickTrayIcon;
 
+
+        //ルールの状態監視を開始
+        this.observerCts = this.usecase.ObserveRule(
+            this.rules,
+            (rule) => {System.Console.WriteLine($"e {rule.Name}");},
+            (rule) => {System.Console.WriteLine($"d {rule.Name}");}
+        );
+
+    }
+
+    private void StopApp()
+    {
+        this.Shutdown();
+        this.observerCts.Cancel();
+    }
+
+    private void OnClickTrayIcon(object? sender, MouseEventArgs e)
+    {
         
     }
 }

@@ -26,8 +26,9 @@ public class RuleParser
         this.serializerOptions = new JsonSerializerOptions() 
         { 
             WriteIndented = true,
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,
             Converters = {
-                new SubTypeConverter<IAnyFunction>(GetTypeFromSimpleName)
+                new SubTypeConverter<object>(GetTypeFromSimpleName),
             }
         };
     }

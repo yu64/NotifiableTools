@@ -14,8 +14,10 @@ public class AppEntryPoint
         var console = new ConsoleController(
             (rules) => new TrayController(
                 rules,
-                new Usecase(), 
-                () => new ToolBarController()
+                new Usecase(
+                    new ShellExecutor()
+                ), 
+                (action) => new ActionUiController(action)
             ),
             new RuleParser()
         );

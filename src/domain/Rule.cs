@@ -11,15 +11,23 @@ public readonly record struct Rule
     public string Name { get; }
 
     [Required]
+    public int IntervalMilliseconds { get; }
+
+    [Required]
     public IBoolFunction Condition { get; }
 
     [Required]
     public ImmutableList<AbstractAction> Actions { get; }
 
     [JsonConstructor]
-    public Rule(string name, IBoolFunction condition, ImmutableList<AbstractAction> actions)
-    {
+    public Rule(
+        string name, 
+        int intervalMilliseconds,
+        IBoolFunction condition, 
+        ImmutableList<AbstractAction> actions
+    ) {
         this.Name = name;
+        this.IntervalMilliseconds = intervalMilliseconds;
         this.Condition = condition;
         this.Actions = actions;
     }

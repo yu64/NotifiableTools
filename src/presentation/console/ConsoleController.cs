@@ -51,16 +51,17 @@ public class ConsoleController
             description: "出力先フォルダ",
             getDefaultValue: () => Directory.GetCurrentDirectory()
         );
-  
+
 
         //コマンド体系を定義
-        return new()
+        return new RootCommand()
         {
             new SubCommand("template", "設定ファイルのテンプレートを生成します")
             {
                 output,
 
                 CommandHandler.Create(this.CreateTemplate)
+                
             },
 
             new SubCommand("start", "アプリケーションを起動します")
