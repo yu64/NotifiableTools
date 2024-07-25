@@ -1,18 +1,20 @@
 
 
 using System.Text.Json.Serialization;
+using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
 [AllSubType]
 public abstract class AbstractAction
 {
-    public string Shell { get; }
+    [Required]
+    public string Command { get; }
 
     [JsonConstructor]
-    public AbstractAction(string shell)
+    public AbstractAction(string command)
     {
-        this.Shell = shell;
+        this.Command = command;
     }
 
 

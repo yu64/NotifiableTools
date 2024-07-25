@@ -4,7 +4,7 @@ using Json.Schema.Generation;
 namespace NotifiableTools;
 
 
-public readonly record struct IsContainFunction : IBoolFunction
+public readonly record struct IsContain : IBoolFunction
 {
 
     [Required]
@@ -14,7 +14,7 @@ public readonly record struct IsContainFunction : IBoolFunction
     public string Part { get; }
 
     [JsonConstructor]
-    public IsContainFunction(string all, string part)
+    public IsContain(string all, string part)
     {
         All = all;
         Part = part;

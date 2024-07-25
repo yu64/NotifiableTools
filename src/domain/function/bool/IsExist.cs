@@ -4,7 +4,7 @@ using Json.Schema.Generation;
 namespace NotifiableTools;
 
 
-public readonly record struct IsExistFunction : IBoolFunction
+public readonly record struct IsExist : IBoolFunction
 {
     [Required]
     public IAnyFunction Target { get; }
@@ -12,7 +12,7 @@ public readonly record struct IsExistFunction : IBoolFunction
     
 
     [JsonConstructor]
-    public IsExistFunction(IAnyFunction target)
+    public IsExist(IAnyFunction target)
     {
         Target = target;
     }

@@ -4,14 +4,14 @@ using Json.Schema.Generation;
 namespace NotifiableTools;
 
 
-public readonly record struct NotFunction : IBoolFunction
+public readonly record struct Not : IBoolFunction
 {
     [Required]
     public IBoolFunction Target { get; }
 
 
     [JsonConstructor]
-    public NotFunction(IBoolFunction target)
+    public Not(IBoolFunction target)
     {
         Target = target;
     }

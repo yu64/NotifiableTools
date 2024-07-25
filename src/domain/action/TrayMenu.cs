@@ -6,7 +6,7 @@ namespace NotifiableTools;
 public class TrayMenu : AbstractAction
 {
     [JsonConstructor]
-    public TrayMenu(string shell) : base(shell)
+    public TrayMenu(string command) : base(command)
     {
     }
 }

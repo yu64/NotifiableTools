@@ -15,8 +15,8 @@ internal class SubTypeRefiner : ISchemaRefiner
 
     public void Run(SchemaGenerationContextBase context)
     {
-        this.RegisterSubType(context);
-        this.RegisterTypeName(context);
+        this.RegisterSubTypeToSuperType(context);
+        this.RegisterTypeNameToSubType(context);
     }
 
 
@@ -24,7 +24,7 @@ internal class SubTypeRefiner : ISchemaRefiner
     //===================================================================================
 
 
-    private void RegisterSubType(SchemaGenerationContextBase context)
+    private void RegisterSubTypeToSuperType(SchemaGenerationContextBase context)
     {
         var type = context.Type;
         var attributes = type.GetCustomAttributes(false);
@@ -43,13 +43,36 @@ internal class SubTypeRefiner : ISchemaRefiner
             return;
         }
 
-        var subContexts = subTypes.Select((t) => SchemaGenerationContextCache.Get(t)).ToArray();
 
+
+        //スーパータイプは、サブタイプのいずれかと同等のプロパティを保持するように登録する
+        var subContexts = subTypes.Select((t) => SchemaGenerationContextCache.Get(t)).ToArray();
         var anyOf = new AnyOfTypeIntent(subContexts);
         context.Intents.Add(anyOf);
+
+
+        
+        var list = (new Attribute[]{new RequiredAttribute()}).ToList();
+        var stringContext = SchemaGenerationContextCache.Get(typeof(string), list);
+        
+        //スーパータイプの型情報プロパティを先頭に追記(値は定めない)
+        this.EditIntent(context, () => new PropertiesIntent([]), (i) => {
+            return new PropertiesIntent(
+                i.Properties
+                .Prepend(new KeyValuePair<string, SchemaGenerationContextBase>("$type", stringContext))
+                .ToDictionary()
+            );
+        });
+        
+        //スーパータイプの型情報プロパティを必須とする
+        this.EditIntent(context, () => new RequiredIntent([]), (i) => {
+            
+            i.RequiredProperties.Add("$type");
+            return i;
+        });
     }
 
-    private void RegisterTypeName(SchemaGenerationContextBase context)
+    private void RegisterTypeNameToSubType(SchemaGenerationContextBase context)
     {
         var type = context.Type;
 
@@ -71,10 +94,10 @@ internal class SubTypeRefiner : ISchemaRefiner
             return;
         }
         
-        var list = (new Attribute[]{new ConstAttribute(type.Name)}).ToList();
+        var list = (new Attribute[]{new ConstAttribute(type.Name), new RequiredAttribute()}).ToList();
         var typeNameContext = SchemaGenerationContextCache.Get(typeof(string), list);
 
-        //先頭に型情報の追記
+        //サブクラスの型情報プロパティを先頭に追記(値はサブクラスに対応した定数)
         this.EditIntent(context, () => new PropertiesIntent([]), (i) => {
             return new PropertiesIntent(
                 i.Properties
@@ -83,7 +106,7 @@ internal class SubTypeRefiner : ISchemaRefiner
             );
         });
         
-        //型情報を必須とする
+        //サブクラスの型情報プロパティを必須とする
         this.EditIntent(context, () => new RequiredIntent([]), (i) => {
             
             i.RequiredProperties.Add("$type");
