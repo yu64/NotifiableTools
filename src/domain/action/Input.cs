@@ -4,13 +4,13 @@ using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
-public class Input : AbstractAction
+public record class Input : AbstractAction
 {
     [Required]
     public IPosition Position { get; }
     
     [JsonConstructor]
-    public Input(string command, IPosition position) : base(command)
+    public Input(string name, string command, IPosition position) : base(name, command)
     {
         this.Position = position;
     }

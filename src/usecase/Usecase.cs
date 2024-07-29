@@ -21,7 +21,6 @@ public class Usecase
         var cts = new CancellationTokenSource();
 
 
-        System.Console.WriteLine($"Start ");
 
         //ルールごとに非同期な判定処理を行う
         ruleSet.Rules.ForEach((rule) => Task.Factory.StartNew(async () => {
@@ -41,6 +40,7 @@ public class Usecase
                 //ルールごとの待機時間分、待機する
                 Thread.Sleep(100);
             }
+
 
         }, TaskCreationOptions.LongRunning));
 

@@ -6,9 +6,9 @@ namespace NotifiableTools;
 
 public partial class ActionUiController : Window
 {
-    private readonly Action action;
+    private readonly AbstractAction action;
 
-    public ActionUiController(Action action)
+    public ActionUiController(AbstractAction action)
     {
         this.InitializeComponent();
         this.action = action;

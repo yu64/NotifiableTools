@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using System.Windows.Media;
 
 namespace NotifiableTools;
@@ -10,10 +12,11 @@ public partial class TrayController : System.Windows.Application
 
     private readonly RuleSet rules;
     private readonly Usecase usecase;
-    private readonly Func<Action, ActionUiController> actionUiFactory;
+    private readonly Func<AbstractAction, ActionUiController> actionUiFactory;
 
 
     private CancellationTokenSource observerCts;
+    private Dictionary<Rule, ImmutableList<Window>> ruleToUiChildren = [];
     private NotifyIcon trayIcon;
 
 
@@ -22,13 +25,14 @@ public partial class TrayController : System.Windows.Application
     public TrayController(
         RuleSet rules, 
         Usecase usecase,
-        Func<Action, ActionUiController> actionUiFactory
+        Func<AbstractAction, ActionUiController> actionUiFactory
     )
     {
         this.rules = rules;
         this.usecase = usecase;
         this.actionUiFactory = actionUiFactory;
-        this.InitializeComponent();
+
+        //this.InitializeComponent();
     }
 
 
@@ -41,7 +45,7 @@ public partial class TrayController : System.Windows.Application
 
         
         var contextMenu = new ContextMenuStrip();
-        contextMenu.Items.Add("終了", null, (_, _) => this.StopApp());
+        contextMenu.Items.Add("終了", null, (_, _) => this.Shutdown());
 
         //トレイアイコンを作成
         this.trayIcon = new NotifyIcon()
@@ -63,19 +67,59 @@ public partial class TrayController : System.Windows.Application
 
     }
 
-    private void StopApp()
+    protected override void OnExit(ExitEventArgs e)
     {
-        this.Shutdown();
+        base.OnExit(e);
+        this.trayIcon.Dispose();
         this.observerCts.Cancel();
     }
+
 
     private void EnableActionUi(Rule rule)
     {
         System.Console.WriteLine($"enable {rule.Name}");
+        
+        if(this.ruleToUiChildren.ContainsKey(rule))
+        {
+            return;
+        }
+        
+        //(UI)メインスレッドで同期実行する
+        this.Dispatcher.Invoke(() => {
+
+            var children = rule.Actions.Select((v) => (Window)this.actionUiFactory(v)).ToImmutableList();
+        
+            this.ruleToUiChildren.Add(rule, children);
+
+            foreach(var child in children)
+            {
+                child.Show();
+            }
+        });
+
+        
     }
     private void DisableActionUi(Rule rule)
     {
         System.Console.WriteLine($"disable {rule.Name}");
+        
+        if(!ruleToUiChildren.TryGetValue(rule, out ImmutableList<Window>? chlidren))
+        {
+            return;
+        }
+
+        this.ruleToUiChildren.Remove(rule);
+
+        //(UI)メインスレッドで同期実行する
+        this.Dispatcher.Invoke(() => {
+
+            chlidren.ForEach((w) => {
+            
+                w.Close();
+            });
+        });
+        
+        
     }
 
     private void OnClickTrayIcon(object? sender, MouseEventArgs e)

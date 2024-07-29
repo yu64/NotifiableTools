@@ -6,14 +6,18 @@ using Json.Schema.Generation;
 namespace NotifiableTools;
 
 [AllSubType]
-public abstract class AbstractAction
+public abstract record class AbstractAction
 {
+    [Required]
+    public string Name { get; }
+
     [Required]
     public string Command { get; }
 
     [JsonConstructor]
-    public AbstractAction(string command)
+    public AbstractAction(string name, string command)
     {
+        this.Name = name;
         this.Command = command;
     }
 

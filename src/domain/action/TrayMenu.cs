@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace NotifiableTools;
 
-public class TrayMenu : AbstractAction
+public record class TrayMenu : AbstractAction
 {
     [JsonConstructor]
-    public TrayMenu(string command) : base(command)
+    public TrayMenu(string name, string command) : base(name, command)
     {
     }
 }
