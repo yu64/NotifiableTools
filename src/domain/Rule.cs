@@ -7,12 +7,12 @@ namespace NotifiableTools;
 
 public readonly record struct Rule
 {
-    [Required]
-    public string Name { get; }
+    public string? Name { get; }
 
     [Default(100)]
     public int IntervalMilliseconds { get; }
 
+    [Obsolete("Ruleの非同期処理において、ログ出力は都合が悪く本格的に実装されていないため、非推奨")]
     [Default(false)]
     public bool EnableLog { get; }
 
@@ -24,7 +24,7 @@ public readonly record struct Rule
 
     [JsonConstructor]
     public Rule(
-        string name, 
+        string? name, 
         int intervalMilliseconds,
         bool enableLog,
         IBoolFunction condition, 

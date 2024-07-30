@@ -15,8 +15,6 @@ public readonly record struct GetFocusedElement() : IUiElementFunction
     {
         var auto = ctx.GetOrCreateDisposable(() => new UIA3Automation());
         var ele = auto.FocusedElement();
-        
-        ctx.LogFuncResult(ele, this.GetType());
 
         return Task.FromResult<AutomationElement?>(ele);
     }
