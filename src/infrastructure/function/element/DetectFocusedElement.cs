@@ -19,6 +19,7 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
 
         var handlerId = auto.RegisterFocusChangedEvent((ele) => {
 
+            
             tcs.SetResult(ele);
         });
 
