@@ -10,8 +10,11 @@ public readonly record struct Rule
     [Required]
     public string Name { get; }
 
-    [Required]
+    [Default(100)]
     public int IntervalMilliseconds { get; }
+
+    [Default(false)]
+    public bool IsDebug { get; }
 
     [Required]
     public IBoolFunction Condition { get; }
@@ -23,11 +26,13 @@ public readonly record struct Rule
     public Rule(
         string name, 
         int intervalMilliseconds,
+        bool isDebug,
         IBoolFunction condition, 
         ImmutableList<AbstractAction> actions
     ) {
         this.Name = name;
         this.IntervalMilliseconds = intervalMilliseconds;
+        this.IsDebug = isDebug;
         this.Condition = condition;
         this.Actions = actions;
     }

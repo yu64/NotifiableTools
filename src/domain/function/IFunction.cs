@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -11,7 +12,7 @@ namespace NotifiableTools;
 public interface IAnyFunction
 {
 
-    public Task<T> Call<T>()
+    public Task<T> Call<T>(IFunctionContext ctx)
     {
         throw new Exception();
     }
@@ -21,10 +22,10 @@ public interface IAnyFunction
 [AllSubType()]
 public interface IAnyFunction<TResult> : IAnyFunction
 {
-    async Task<T> IAnyFunction.Call<T>()
+    async Task<T> IAnyFunction.Call<T>(IFunctionContext ctx)
     {
         //実行
-        object? value = (await this.Call());
+        object? value = (await this.Call(ctx));
 
         //キャストして返す
 #pragma warning disable 
@@ -32,11 +33,17 @@ public interface IAnyFunction<TResult> : IAnyFunction
 #pragma warning restore
     }
 
-    public Task<TResult> Call();
+    public Task<TResult> Call(IFunctionContext ctx);
 }
 
 [AllSubType()]
 public interface IBoolFunction : IAnyFunction<bool>
+{
+
+}
+
+[AllSubType()]
+public interface IStringFunction : IAnyFunction<string>
 {
 
 }

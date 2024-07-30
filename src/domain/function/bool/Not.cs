@@ -17,8 +17,8 @@ public readonly record struct Not : IBoolFunction
     }
 
 
-    public async Task<bool> Call()
+    public async Task<bool> Call(IFunctionContext ctx)
     {
-        return !await Target.Call();
+        return !await Target.Call(ctx);
     }
 }

@@ -14,14 +14,14 @@ public class AppEntryPoint
     //     // Thread.CurrentThread.SetApartmentState(ApartmentState.Unknown);
     //     // Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
 
-    //     App.Call();
+    //     App.Call(ctx);
     //     return await Task.FromResult(0);
     // }
 
     // [STAThread]
     // public static void Main(string[] args)
     // {
-    //     App.Call();
+    //     App.Call(ctx);
     // }
 
     public static async Task<int> Main(string[] args)
@@ -33,6 +33,7 @@ public class AppEntryPoint
             (rules) => new TrayController(
                 rules,
                 new Usecase(
+                    () => new FunctionContext(),
                     new ShellExecutor()
                 ), 
                 (action) => new ActionUiController(action)

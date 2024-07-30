@@ -8,21 +8,21 @@ public readonly record struct IsContain : IBoolFunction
 {
 
     [Required]
-    public string All { get; }
+    public IStringFunction All { get; }
     
     [Required]
-    public string Part { get; }
+    public IStringFunction Part { get; }
 
     [JsonConstructor]
-    public IsContain(string all, string part)
+    public IsContain(IStringFunction all, IStringFunction part)
     {
         All = all;
         Part = part;
     }
 
-    public Task<bool> Call()
+    public async Task<bool> Call(IFunctionContext ctx)
     {
-        return Task.FromResult(this.All.Contains(this.Part));
+        return (await this.All.Call(ctx)).Contains(await this.Part.Call(ctx));
     }
 
 }

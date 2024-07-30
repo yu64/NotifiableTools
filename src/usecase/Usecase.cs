@@ -7,12 +7,15 @@ namespace NotifiableTools;
 
 public class Usecase
 {
+    private readonly Func<Rule, IFunctionContext> contextFuctory;
     private readonly ICommandExecutor commandExecutor;
 
     public Usecase(
+        Func<Rule, IFunctionContext> contextFuctory,
         ICommandExecutor commandExecutor
     ) 
     {
+        this.contextFuctory = contextFuctory;
         this.commandExecutor = commandExecutor;
     }
 
@@ -20,10 +23,10 @@ public class Usecase
     {
         var cts = new CancellationTokenSource();
 
-
-
         //ルールごとに非同期な判定処理を行う
         ruleSet.Rules.ForEach((rule) => Task.Factory.StartNew(async () => {
+            
+            using var ctx = this.contextFuctory(rule);
 
             //無限ループ
             while(true)
@@ -32,13 +35,13 @@ public class Usecase
                 cts.Token.ThrowIfCancellationRequested();
 
                 //ルールが有効であるか判定
-                var isEnable = await rule.Condition.Call();
+                var isEnable = await rule.Condition.Call(ctx);
 
                 //有効であるか、無効であるか伝える
                 (isEnable ? tellEnable : tellDisable)(rule);
 
                 //ルールごとの待機時間分、待機する
-                Thread.Sleep(100);
+                Thread.Sleep(rule.IntervalMilliseconds);
             }
 
 
