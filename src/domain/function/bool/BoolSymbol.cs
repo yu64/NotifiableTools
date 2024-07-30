@@ -5,7 +5,8 @@ namespace NotifiableTools;
 
 
 public readonly record struct BoolSymbol : IBoolFunction
-{
+{   
+    [Default(false)]
     public bool Value { get; }
 
 

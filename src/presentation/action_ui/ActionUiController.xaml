@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NotifiableTools"
         mc:Ignorable="d"
-        Title="ActionUiController" Height="450" Width="800">
+        Title="Empty Action Name" Height="450" Width="800"
+        ShowActivated="false"
+>
     <Grid>
 
     </Grid>

@@ -32,7 +32,7 @@ public partial class TrayController : System.Windows.Application
         this.usecase = usecase;
         this.actionUiFactory = actionUiFactory;
 
-        //this.InitializeComponent();
+        this.InitializeComponent();
     }
 
 
