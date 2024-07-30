@@ -26,6 +26,8 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
 
         auto.UnregisterFocusChangedEvent(handlerId);
 
+        ctx.LogFuncResult(result, this.GetType());
+
         return result;
     }
 

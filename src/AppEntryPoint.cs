@@ -33,7 +33,7 @@ public class AppEntryPoint
             (rules) => new TrayController(
                 rules,
                 new Usecase(
-                    () => new FunctionContext(),
+                    (rule) => new FunctionContext(rule),
                     new ShellExecutor()
                 ), 
                 (action) => new ActionUiController(action)

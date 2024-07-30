@@ -27,8 +27,10 @@ public class RuleParser
         { 
             WriteIndented = true,
             NumberHandling = JsonNumberHandling.AllowReadingFromString,
+            PropertyNameCaseInsensitive = true,
             Converters = {
                 new SubTypeConverter<object>(GetTypeFromSimpleName),
+                new TextToBoolConverter()
             }
         };
     }
