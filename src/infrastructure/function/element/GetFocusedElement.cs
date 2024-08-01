@@ -16,6 +16,12 @@ public readonly record struct GetFocusedElement() : IUiElementFunction
         var auto = ctx.GetOrCreateDisposable(() => new UIA3Automation());
         var ele = auto.FocusedElement();
 
+        // 自分自身のプロセスに関係するものを除外
+        if(ele.Properties.ProcessId.ValueOrDefault == Environment.ProcessId)
+        {
+            return Task.FromResult<AutomationElement?>(null);
+        }
+
         return Task.FromResult<AutomationElement?>(ele);
     }
 

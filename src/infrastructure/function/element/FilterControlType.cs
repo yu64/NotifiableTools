@@ -23,7 +23,12 @@ public readonly record struct IsEqualsControlType(
     {
         var ele = await this.Element.Call(ctx);
 
-        if(ele != null && ele.ControlType == this.ControlType)
+        if(ele == null)
+        {
+            return null;
+        }
+
+        if(ele.ControlType == this.ControlType)
         {
             return ele;
         }

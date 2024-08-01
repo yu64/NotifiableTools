@@ -84,6 +84,12 @@ public partial class TrayController : System.Windows.Application
             return;
         }
         
+        var lookup = rule.Actions.ToLookup((a) => a is AbstractUiAction);
+        var windowActions = lookup[true];
+        var noWindowActions = lookup[false];
+
+        
+        
         //(UI)メインスレッドで同期実行する
         this.Dispatcher.Invoke(() => {
 

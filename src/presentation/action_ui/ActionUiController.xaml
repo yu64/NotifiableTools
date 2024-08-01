@@ -7,8 +7,35 @@
         mc:Ignorable="d"
         Title="Empty Action Name" Height="450" Width="800"
         ShowActivated="false"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
+        AllowsTransparency="true"
+        Topmost="true"
+        SizeToContent="WidthAndHeight"
 >
     <Grid>
+        <!-- <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions> -->
 
+        <!-- <Button 
+            x:Name="Button"
+            Grid.Row="0" 
+            Visibility="Visible"
+        >
+            Button2
+        </Button>
+        -->
+        
+        <!-- <Button 
+            x:Name="Button"
+            Visibility="Visible"
+        >
+            Button2
+        </Button>  -->
+
+        <TextBox HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="497"/>
+
+       
     </Grid>
 </Window>

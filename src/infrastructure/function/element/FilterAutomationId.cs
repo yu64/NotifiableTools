@@ -22,7 +22,12 @@ public readonly record struct FilterAutomationId(
     {
         var ele = await this.Element.Call(ctx);
 
-        if(ele != null && string.Equals(ele.Properties.AutomationId.ValueOrDefault, await this.AutomationId.Call(ctx)))
+        if(ele == null)
+        {
+            return null;
+        }
+
+        if(string.Equals(ele.Properties.AutomationId.ValueOrDefault, await this.AutomationId.Call(ctx)))
         {
             return ele;
         }

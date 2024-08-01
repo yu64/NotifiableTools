@@ -1,9 +1,12 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
+using FlaUI.Core.EventHandlers;
 using FlaUI.UIA3;
 using Json.Schema.Generation;
+using System.Threading.Channels;
 
 namespace NotifiableTools;
 
@@ -15,19 +18,46 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
     {
         
         var auto = ctx.GetOrCreateDisposable(() => new UIA3Automation());
-        var tcs = new TaskCompletionSource<AutomationElement>();
+        var buf = ctx.GetOrCreateDisposable(() => new FocusedElementBuffer(auto));
 
-        var handlerId = auto.RegisterFocusChangedEvent((ele) => {
 
-            
-            tcs.SetResult(ele);
-        });
-
-        var result = await tcs.Task;
-
-        auto.UnregisterFocusChangedEvent(handlerId);
+        var result = await buf.GetAndRemoveFirst();
 
         return result;
+    }
+
+
+    private class FocusedElementBuffer : IDisposable
+    {   
+        
+        private FocusChangedEventHandlerBase handlerId;
+
+        private Channel<AutomationElement> queue = Channel.CreateUnbounded<AutomationElement>();
+
+        public FocusedElementBuffer(AutomationBase auto)
+        {
+            this.handlerId = auto.RegisterFocusChangedEvent(async (ele) => {
+                
+                // 自分自身のプロセスに関係するものを除外
+                if(ele.Properties.ProcessId.ValueOrDefault == Environment.ProcessId)
+                {
+                    return;
+                }
+
+                await queue.Writer.WriteAsync(ele);
+            });
+        }
+
+        public async Task<AutomationElement> GetAndRemoveFirst()
+        {
+            var ele = await queue.Reader.ReadAsync();
+            return ele;
+        }
+
+        public void Dispose()
+        {
+            this.handlerId.Dispose();
+        }
     }
 
 }

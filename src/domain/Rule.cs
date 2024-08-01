@@ -7,14 +7,13 @@ namespace NotifiableTools;
 
 public readonly record struct Rule
 {
-    public string? Name { get; }
+    public string? Name { get; } = null;
 
     [Default(100)]
-    public int IntervalMilliseconds { get; }
+    public int IntervalMilliseconds { get; } = 100;
 
-    [Obsolete("Ruleの非同期処理において、ログ出力は都合が悪く本格的に実装されていないため、非推奨")]
-    [Default(false)]
-    public bool EnableLog { get; }
+    [Default(true)]
+    public bool Enable { get; } = true;
 
     [Required]
     public IBoolFunction Condition { get; }
@@ -26,13 +25,13 @@ public readonly record struct Rule
     public Rule(
         string? name, 
         int intervalMilliseconds,
-        bool enableLog,
+        bool enable,
         IBoolFunction condition, 
         ImmutableList<AbstractAction> actions
     ) {
         this.Name = name;
         this.IntervalMilliseconds = intervalMilliseconds;
-        this.EnableLog = enableLog;
+        this.Enable = enable;
         this.Condition = condition;
         this.Actions = actions;
     }

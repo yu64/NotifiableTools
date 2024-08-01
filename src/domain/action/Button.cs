@@ -4,15 +4,11 @@ using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
-public record class Button : AbstractAction
+public record class Button : AbstractUiAction
 {
-
-    [Required]
-    public IPosition Position { get; }
-
     [JsonConstructor]
-    public Button(string name, string command, IPosition position) : base(name, command)
+    public Button(string name, string command, IPosition position) : base(name, command, position)
     {
-        this.Position = position;
+
     }
 }

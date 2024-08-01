@@ -6,12 +6,11 @@ namespace NotifiableTools;
 
 public record class HookedInput : AbstractAction
 {
-    [Required]
-    public IPosition Position { get; }
+
     
     [JsonConstructor]
-    public HookedInput(string name, string command, IPosition position) : base(name, command)
+    public HookedInput(string name, string command) : base(name, command)
     {
-        this.Position = position;
+
     }
 }

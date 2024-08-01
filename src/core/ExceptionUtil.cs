@@ -7,6 +7,13 @@ namespace NotifiableTools;
 public static class ExceptionUtil
 {
 
+    public static void Print(Exception e)
+    {
+            Debug.Print($"Exception: {e.Message}");
+            Debug.Print($"Type: {e.GetType().Name}");
+            Debug.Print(e.StackTrace);
+    }
+
     /// <summary>
     /// try-catch文の省略形。
     /// <code>
@@ -25,9 +32,7 @@ public static class ExceptionUtil
         }
         catch(Exception e)
         {
-            Debug.Print($"Exception: {e.Message}");
-            Debug.Print($"Type: {e.GetType().Name}");
-            Debug.Print(e.StackTrace);
+            ExceptionUtil.Print(e);
             return outlierValue;
         }
     }
@@ -52,9 +57,7 @@ public static class ExceptionUtil
         }
         catch(Exception e)
         {
-            Debug.Print($"Exception: {e.Message}");
-            Debug.Print($"Type: {e.GetType().Name}");
-            Debug.Print(e.StackTrace);
+            ExceptionUtil.Print(e);
             return outlierValue;
         }
     }

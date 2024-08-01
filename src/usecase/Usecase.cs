@@ -1,5 +1,7 @@
 
 
+using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -23,18 +25,20 @@ public class Usecase
     {
         var cts = new CancellationTokenSource();
 
+        var enableRules = ruleSet.Rules.Where((r) => r.Enable);
+
         //ルールごとに非同期な判定処理を行う
-        ruleSet.Rules.ForEach((rule) => Task.Factory.StartNew(async () => {
+        enableRules.ToList().ForEach((rule) => Task.Factory.StartNew(this.WrapRestarter(async () => {
             
             using var ctx = this.contextFuctory(rule);
-
+            
             //無限ループ
             while(true)
             {
                 //タスクがキャンセルされたら脱出
                 cts.Token.ThrowIfCancellationRequested();
 
-                //ルールが有効であるか判定
+                //ルールの条件を判定
                 var isEnable = await rule.Condition.Call(ctx);
 
                 //有効であるか、無効であるか伝える
@@ -45,7 +49,7 @@ public class Usecase
             }
 
 
-        }, TaskCreationOptions.LongRunning));
+        }), TaskCreationOptions.LongRunning));
 
 
 
@@ -60,6 +64,28 @@ public class Usecase
         });
     }
 
-
+    private Func<T> WrapRestarter<T>(Func<T> inner)
+    {
+        return () => {
+            
+            while (true)
+            {
+                try
+                {
+                    return inner();
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    //例外が起きたら再実行
+                    ExceptionUtil.Print(e);
+                }
+            }
+            
+        };
+    }
     
 }
