@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
@@ -6,13 +7,13 @@ using System.Windows.Interop;
 
 namespace NotifiableTools;
 
-public partial class ToolController : Window
+public partial class NotionController : Window
 {
     private readonly INotion notion;
 
     
 
-    public ToolController(INotion notion)
+    public NotionController(INotion notion)
     {
         this.notion = notion;
 
@@ -23,7 +24,7 @@ public partial class ToolController : Window
         //UI初期化
         this.InitializeComponent();
 
-
+        this.Show();
 
         var desktop = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
     }

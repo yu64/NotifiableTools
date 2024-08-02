@@ -35,7 +35,7 @@ public class AppEntryPoint
                 new Usecase(
                     (rule) => new FunctionContext(rule)
                 ), 
-                (notion) => new ToolController(notion)
+                (notion) => new NotionController(notion)
             ),
             new RuleParser()
         );

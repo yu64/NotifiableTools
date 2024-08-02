@@ -106,7 +106,7 @@ public class ConsoleController
                 .Aggregate((a, b) => a.Merge(b));
 
             //タスクトレイにアイコンを追加
-            this.trayFactory(rules).Run();
+            this.trayFactory(rules);
         });
 
     }
