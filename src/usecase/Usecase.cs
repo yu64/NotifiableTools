@@ -10,18 +10,15 @@ namespace NotifiableTools;
 public class Usecase
 {
     private readonly Func<Rule, IFunctionContext> contextFuctory;
-    private readonly ICommandExecutor commandExecutor;
 
     public Usecase(
-        Func<Rule, IFunctionContext> contextFuctory,
-        ICommandExecutor commandExecutor
+        Func<Rule, IFunctionContext> contextFuctory
     ) 
     {
         this.contextFuctory = contextFuctory;
-        this.commandExecutor = commandExecutor;
     }
 
-    public CancellationTokenSource ObserveRule(RuleSet ruleSet, Action<Rule> tellEnable, Action<Rule> tellDisable)
+    public CancellationTokenSource ObserveRule(RuleSet ruleSet, Action<Rule> tellStart, Action<Rule> tellStop)
     {
         var cts = new CancellationTokenSource();
 
@@ -31,6 +28,9 @@ public class Usecase
         enableRules.ToList().ForEach((rule) => Task.Factory.StartNew(this.WrapRestarter(async () => {
             
             using var ctx = this.contextFuctory(rule);
+
+            //前回の判定結果
+            var isMeetPrevCondition = false;
             
             //無限ループ
             while(true)
@@ -39,10 +39,23 @@ public class Usecase
                 cts.Token.ThrowIfCancellationRequested();
 
                 //ルールの条件を判定
-                var isEnable = await rule.Condition.Call(ctx);
+                var isMeetCondition = await rule.Condition.Call(ctx);
 
-                //有効であるか、無効であるか伝える
-                (isEnable ? tellEnable : tellDisable)(rule);
+                //判定結果の変化を伝える
+                //false => true
+                if(!isMeetPrevCondition && isMeetCondition)
+                {
+                    tellStart(rule);
+                }
+
+                //true => false
+                if(isMeetPrevCondition && !isMeetCondition)
+                {
+                    tellStop(rule);
+                }
+
+                //前回の判定結果を保存
+                isMeetPrevCondition = isMeetCondition;
 
                 //ルールごとの待機時間分、待機する
                 Thread.Sleep(rule.IntervalMilliseconds);
@@ -56,13 +69,6 @@ public class Usecase
         return cts;
     }
 
-    public void Executorule(Rule rule)
-    {
-        rule.Actions.ForEach((action) => {
-
-            this.commandExecutor.Execute(action);
-        });
-    }
 
     private Func<T> WrapRestarter<T>(Func<T> inner)
     {

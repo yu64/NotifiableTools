@@ -19,7 +19,7 @@ public readonly record struct Rule
     public IBoolFunction Condition { get; }
 
     [Required]
-    public ImmutableList<AbstractAction> Actions { get; }
+    public ImmutableList<INotion> Notions { get; }
 
     [JsonConstructor]
     public Rule(
@@ -27,13 +27,13 @@ public readonly record struct Rule
         int intervalMilliseconds,
         bool enable,
         IBoolFunction condition, 
-        ImmutableList<AbstractAction> actions
+        ImmutableList<INotion> notions
     ) {
         this.Name = name;
         this.IntervalMilliseconds = intervalMilliseconds;
         this.Enable = enable;
         this.Condition = condition;
-        this.Actions = actions;
+        this.Notions = notions;
     }
 
 

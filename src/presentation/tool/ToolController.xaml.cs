@@ -6,14 +6,16 @@ using System.Windows.Interop;
 
 namespace NotifiableTools;
 
-public partial class ActionUiController : Window
+public partial class ToolController : Window
 {
-    private readonly AbstractAction action;
+    private readonly INotion notion;
 
     
 
-    public ActionUiController(AbstractAction action)
+    public ToolController(INotion notion)
     {
+        this.notion = notion;
+
         //UI初期化時に、なぜかDateTime.Now関連でNullReferenceExceptionが投げられる
         //そのため、明示的に使用し、初期化する
         _ = DateTime.Now;
@@ -21,9 +23,7 @@ public partial class ActionUiController : Window
         //UI初期化
         this.InitializeComponent();
 
-        this.action = action;
 
-        this.Title = action.Name ?? this.Title;
 
         var desktop = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
     }

@@ -12,7 +12,7 @@ public partial class TrayController : System.Windows.Application
 
     private readonly RuleSet rules;
     private readonly Usecase usecase;
-    private readonly Func<AbstractAction, ActionUiController> actionUiFactory;
+    private readonly Func<INotion, ToolController> toolFactory;
 
 
     private CancellationTokenSource observerCts;
@@ -25,12 +25,12 @@ public partial class TrayController : System.Windows.Application
     public TrayController(
         RuleSet rules, 
         Usecase usecase,
-        Func<AbstractAction, ActionUiController> actionUiFactory
+        Func<INotion, ToolController> toolFactory
     )
     {
         this.rules = rules;
         this.usecase = usecase;
-        this.actionUiFactory = actionUiFactory;
+        this.toolFactory = toolFactory;
 
         this.InitializeComponent();
     }
@@ -61,8 +61,8 @@ public partial class TrayController : System.Windows.Application
         //ルールの状態監視を開始
         this.observerCts = this.usecase.ObserveRule(
             this.rules,
-            this.EnableActionUi,
-            this.DisableActionUi
+            this.StartNotions,
+            this.StopNotions
         );
 
     }
@@ -75,7 +75,7 @@ public partial class TrayController : System.Windows.Application
     }
 
 
-    private void EnableActionUi(Rule rule)
+    private void StartNotions(Rule rule)
     {
         System.Console.WriteLine($"enable {rule.Name}");
         
@@ -84,16 +84,16 @@ public partial class TrayController : System.Windows.Application
             return;
         }
         
-        var lookup = rule.Actions.ToLookup((a) => a is AbstractUiAction);
+        var lookup = rule.Notions.ToLookup((a) => a is AbstractUiAction);
         var windowActions = lookup[true];
         var noWindowActions = lookup[false];
 
-        
+
         
         //(UI)メインスレッドで同期実行する
         this.Dispatcher.Invoke(() => {
 
-            var children = rule.Actions.Select((v) => (Window)this.actionUiFactory(v)).ToImmutableList();
+            var children = rule.Notions.Select((v) => (Window)this.toolFactory(v)).ToImmutableList();
         
             this.ruleToUiChildren.Add(rule, children);
 
@@ -105,7 +105,7 @@ public partial class TrayController : System.Windows.Application
 
         
     }
-    private void DisableActionUi(Rule rule)
+    private void StopNotions(Rule rule)
     {
         System.Console.WriteLine($"disable {rule.Name}");
         

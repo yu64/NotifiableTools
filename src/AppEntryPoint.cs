@@ -33,10 +33,9 @@ public class AppEntryPoint
             (rules) => new TrayController(
                 rules,
                 new Usecase(
-                    (rule) => new FunctionContext(rule),
-                    new ShellExecutor()
+                    (rule) => new FunctionContext(rule)
                 ), 
-                (action) => new ActionUiController(action)
+                (notion) => new ToolController(notion)
             ),
             new RuleParser()
         );
