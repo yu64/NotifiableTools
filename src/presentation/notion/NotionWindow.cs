@@ -7,13 +7,13 @@ using System.Windows.Interop;
 
 namespace NotifiableTools;
 
-public partial class NotionController : Window
+public partial class NotionWindow : Window
 {
     private readonly INotion notion;
 
     
 
-    public NotionController(INotion notion)
+    public NotionWindow(INotion notion)
     {
         this.notion = notion;
 
