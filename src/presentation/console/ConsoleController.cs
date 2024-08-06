@@ -8,14 +8,14 @@ namespace NotifiableTools;
 
 public class ConsoleController
 {   
-    private readonly Func<RuleSet, TrayController> trayFactory;
+    private readonly Func<RuleSet, TrayAppController> trayFactory;
     private readonly RuleParser parser;
     private readonly RootCommand root;
 
 
 
     public ConsoleController(
-        Func<RuleSet, TrayController> trayFactory,
+        Func<RuleSet, TrayAppController> trayFactory,
         RuleParser parser
     )
     {

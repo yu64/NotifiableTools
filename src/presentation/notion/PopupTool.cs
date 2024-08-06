@@ -7,15 +7,12 @@ using System.Windows.Interop;
 
 namespace NotifiableTools;
 
-public partial class NotionWindow : Window
+public partial class PopupTool : Window, IDisposable
 {
-    private readonly INotion notion;
-
     
 
-    public NotionWindow(INotion notion)
+    public PopupTool(PopupType type)
     {
-        this.notion = notion;
 
         //UI初期化時に、なぜかDateTime.Now関連でNullReferenceExceptionが投げられる
         //そのため、明示的に使用し、初期化する
@@ -23,12 +20,21 @@ public partial class NotionWindow : Window
 
         //UI初期化
         this.InitializeComponent();
-
+        
         this.Show();
 
         var desktop = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
+        
     }
 
-    
+    public void Dispose()
+    {
+        this.Dispatcher.Invoke(() => this.Close());
+    }
+
+    public enum PopupType
+    {
+        Button
+    }
     
 }
