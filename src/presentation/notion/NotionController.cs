@@ -1,62 +1,104 @@
 
+using System.Collections.Immutable;
 using System.Windows;
+using static NotifiableTools.PopupTool;
 
 namespace NotifiableTools;
 
 public class NotionController : IDisposable
 {
-    private Dictionary<Rule, ImmutableList<IDisposable>> ruleToNotions = [];
+    
+
+    public delegate IDisposable ContextMenuRegister(string? text, Image? image, EventHandler? onClick);
 
 
-    public NotionController()
+    private readonly IActionExecutor executor;
+
+    private Dictionary<Rule, ImmutableList<IDisposable>> ruleToDisposable = [];
+
+
+    public NotionController(IActionExecutor executor)
     {
-        
+        this.executor = executor;
     }
 
-    public void Dispose()
-    {
 
-    }
+    //======================================================================================
 
-    public void ShowNotions(Rule rule, Func<string?, Image?, EventHandler?, IDisposable> registerMenuItem)
+
+    public void ShowNotions(Rule rule, ContextMenuRegister register)
     {
         System.Console.WriteLine($"enable {rule.Name}");
         
-        if(this.ruleToNotions.ContainsKey(rule))
+        if(this.ruleToDisposable.ContainsKey(rule))
         {
             return;
         }
-        
+
         //(UI)メインスレッドで同期実行する
         System.Windows.Application.Current.Dispatcher.Invoke(() => {
 
-            var children = rule.Notions.Select((v) => new NotionController(v, this.trayApp)).ToImmutableList();
-            this.ruleToNotions.Add(rule, children);
+            var displayNotions = rule.Notions
+                .Select((n) => this.ShowNotion(n, register))
+                .Where((d) => d != null)
+                .ToImmutableList();
+                
+            this.ruleToDisposable.Add(rule, displayNotions);
         });
-        
-
-        
     }
 
+    private IDisposable ShowNotion(INotion notion, ContextMenuRegister register)
+    {
+        return notion switch
+        {
+            Button => new PopupTool(PopupType.Button, (args) => this.executor.Execute(notion, args)),
+            
+            _ => throw new ArgumentOutOfRangeException($"Notion:\"{notion.GetType().Name}\"に対応する表示方法が見つかりません"),
+        };
+    }
     
+
+
+
+
+
+    //======================================================================================
+
+
     public void HideNotions(Rule rule)
     {
         System.Console.WriteLine($"disable {rule.Name}");
         
-        if(!ruleToNotions.TryGetValue(rule, out ImmutableList<IDisposable>? chlidren))
+        if(!ruleToDisposable.TryGetValue(rule, out ImmutableList<IDisposable>? chlidren))
         {
             return;
         }
 
-        this.ruleToNotions.Remove(rule);
+        this.ruleToDisposable.Remove(rule);
 
         //(UI)メインスレッドで同期実行する
-        this.trayApp.Dispatcher.Invoke(() => {
+        System.Windows.Application.Current.Dispatcher.Invoke(() => {
 
             chlidren.ForEach((w) => w.Dispose());
         });
-        
-        
     }
+
+
+    public void Dispose()
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+
+            this.ruleToDisposable.Values
+                .SelectMany((list) => list)
+                .ToList()
+                .ForEach((w) => w.Dispose());
+        });
+    }
+
+
+
+    //======================================================================================
+
+
 
 }

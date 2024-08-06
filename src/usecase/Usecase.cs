@@ -18,6 +18,7 @@ public class Usecase
         this.contextFuctory = contextFuctory;
     }
 
+
     public CancellationTokenSource ObserveRule(RuleSet ruleSet, Action<Rule> tellStart, Action<Rule> tellStop)
     {
         var cts = new CancellationTokenSource();

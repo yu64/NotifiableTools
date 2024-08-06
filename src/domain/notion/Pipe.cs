@@ -3,9 +3,7 @@
 
 namespace NotifiableTools;
 
-public interface IUiBuilder
+public class Pipe : INotion
 {
-
     
-
 }

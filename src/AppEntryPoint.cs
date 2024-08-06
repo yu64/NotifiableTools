@@ -30,12 +30,12 @@ public class AppEntryPoint
         Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
 
         var console = new ConsoleController(
-            (rules) => new TrayController(
+            (rules) => new TrayAppController(
                 rules,
                 new Usecase(
                     (rule) => new FunctionContext(rule)
                 ), 
-                (notion) => new NotionController(notion)
+                new NotionController()
             ),
             new RuleParser()
         );

@@ -80,15 +80,6 @@ public partial class TrayApp : System.Windows.Application
         return new DisposableWrapper(() => this.menu.Items.Remove(item));
     }
 
-    private class DisposableWrapper(Action dispose) : IDisposable
-    {
-        
-        public void Dispose()
-        {
-            dispose();
-        }
-    }
-
 
 
     //====================================================================================

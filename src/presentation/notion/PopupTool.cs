@@ -11,7 +11,7 @@ public partial class PopupTool : Window, IDisposable
 {
     
 
-    public PopupTool(PopupType type)
+    public PopupTool(PopupType type, Action<IDictionary<String, String>> onSummit)
     {
 
         //UI初期化時に、なぜかDateTime.Now関連でNullReferenceExceptionが投げられる
