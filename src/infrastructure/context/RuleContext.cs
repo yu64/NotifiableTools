@@ -4,13 +4,16 @@ namespace NotifiableTools;
 
 public class RuleContext : IRuleContext
 {
-    private Rule rule;
-    private Dictionary<Type, IDisposable> commonPool = new();
-    private Dictionary<(IAnyFunction, Type), IDisposable> ownerPool = new();
+
+    public IRuleSetContext ruleSetContext { get; }
+
+    private readonly Rule rule;
+    private readonly Dictionary<Type, IDisposable> commonPool = new();
 
 
-    public RuleContext(Rule rule)
+    public RuleContext(IRuleSetContext ruleSetContext, Rule rule)
     {
+        this.ruleSetContext = ruleSetContext;
         this.rule = rule;
     }   
 

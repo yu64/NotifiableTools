@@ -9,15 +9,19 @@ namespace NotifiableTools;
 
 public class Usecase
 {
-    public delegate IRuleContext ContextFactory(Rule rule);
+    public delegate IRuleSetContext RuleSetContextFactory(RuleSet ruleSet);
+    public delegate IRuleContext RuleContextFactory(IRuleSetContext ctx, Rule rule);
 
-    private readonly ContextFactory createContext;
+    private readonly RuleSetContextFactory createRuleSetContext;
+    private readonly RuleContextFactory createRuleContext;
 
     public Usecase(
-        ContextFactory createContext
+        RuleSetContextFactory createRuleSetContext,
+        RuleContextFactory createRuleContext
     ) 
     {
-        this.createContext = createContext;
+        this.createRuleSetContext = createRuleSetContext;
+        this.createRuleContext = createRuleContext;
     }
 
 
@@ -30,10 +34,12 @@ public class Usecase
     {
         cts ??= new CancellationTokenSource();
 
+        var ruleSetCtx = this.createRuleSetContext(ruleSet);
+
         //ルールごとに非同期な判定処理を行う
-        ruleSet.GetEnableRules().ForEach((rule) => Task.Factory.StartNew(this.WrapRestarter(async () => {
+        var tasks = ruleSet.GetEnableRules().Select((rule) => Task.Factory.StartNew(this.WrapRestarter(async () => {
             
-            using var ctx = this.createContext(rule);
+            using var ctx = this.createRuleContext(ruleSetCtx, rule);
 
             //前回の判定結果
             var isMeetPrevCondition = false;
@@ -72,6 +78,11 @@ public class Usecase
 
         }), TaskCreationOptions.LongRunning));
 
+        //全てのタスクを非同期で待機する
+        Task.WhenAll(tasks).ContinueWith(task => {
+
+            ruleSetCtx.Dispose();
+        });
 
 
         return cts;
