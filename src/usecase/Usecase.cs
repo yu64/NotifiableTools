@@ -9,26 +9,31 @@ namespace NotifiableTools;
 
 public class Usecase
 {
-    private readonly Func<Rule, IFunctionContext> contextFuctory;
+    public delegate IFunctionContext ContextFactory(Rule rule);
+
+    private readonly ContextFactory createContext;
 
     public Usecase(
-        Func<Rule, IFunctionContext> contextFuctory
+        ContextFactory createContext
     ) 
     {
-        this.contextFuctory = contextFuctory;
+        this.createContext = createContext;
     }
 
 
-    public CancellationTokenSource ObserveRule(RuleSet ruleSet, Action<Rule> tellStart, Action<Rule> tellStop)
+    public CancellationTokenSource ObserveRules(
+        RuleSet ruleSet, 
+        Action<Rule> tellStart, 
+        Action<Rule> tellStop,
+        CancellationTokenSource? cts = null
+    )
     {
-        var cts = new CancellationTokenSource();
-
-        var enableRules = ruleSet.Rules.Where((r) => r.Enable);
+        cts ??= new CancellationTokenSource();
 
         //ルールごとに非同期な判定処理を行う
-        enableRules.ToList().ForEach((rule) => Task.Factory.StartNew(this.WrapRestarter(async () => {
+        ruleSet.GetEnableRules().ForEach((rule) => Task.Factory.StartNew(this.WrapRestarter(async () => {
             
-            using var ctx = this.contextFuctory(rule);
+            using var ctx = this.createContext(rule);
 
             //前回の判定結果
             var isMeetPrevCondition = false;
@@ -39,6 +44,8 @@ public class Usecase
                 //タスクがキャンセルされたら脱出
                 cts.Token.ThrowIfCancellationRequested();
 
+                System.Console.WriteLine($"check {rule.Name}");
+                
                 //ルールの条件を判定
                 var isMeetCondition = await rule.Condition.Call(ctx);
 

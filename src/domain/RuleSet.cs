@@ -24,4 +24,9 @@ public readonly record struct RuleSet
         var rules = this.Rules.Concat(left.Rules);
         return new RuleSet(ImmutableList.CreateRange(rules));
     }
+
+    public ImmutableList<Rule> GetEnableRules()
+    {
+        return this.Rules.Where((r) => r.Enable).ToImmutableList();
+    }
 }

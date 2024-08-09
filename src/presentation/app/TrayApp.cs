@@ -10,12 +10,14 @@ namespace NotifiableTools;
 
 public partial class TrayApp : System.Windows.Application
 {
+    public delegate void OnExitTrayApp();
+
     private NotifyIcon? trayIcon;
     private ContextMenuStrip menu;
 
-    private TrayAppHandler handler;
+    private OnExitTrayApp handler;
 
-    public TrayApp(TrayAppHandler handler)
+    public TrayApp(OnExitTrayApp handler)
     {
         this.handler = handler;
         this.InitializeComponent();
@@ -53,14 +55,12 @@ public partial class TrayApp : System.Windows.Application
         };
         //this.trayIcon.MouseClick += this.OnClickTrayIcon;
 
-
-        this.handler.OnStartupTrayApp();
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
         base.OnExit(e);
-        this.handler.OnExitTrayApp();
+        this.handler();
         this.trayIcon?.Dispose();
     }
 
@@ -69,27 +69,14 @@ public partial class TrayApp : System.Windows.Application
     //====================================================================================
 
 
-    /// <summary>
-    /// コンテキストメニューに項目を追加します。戻り値をDisposeすると削除されます。
-    /// </summary>
-    /// <returns></returns>
-    public IDisposable RegisterMenuItem(string? text, Image? image, EventHandler? onClick)
-    {
-        var item = this.menu.Items.Add(text, image, onClick);
 
+    public IDisposable RegisterMenuItem(INotion notion, Action<IDictionary<string, string>> onSubmit)
+    {
+        var item = this.menu.Items.Add("項目", null, (sender, args) => onSubmit(new Dictionary<string, string>()));
         return new DisposableWrapper(() => this.menu.Items.Remove(item));
     }
 
 
-
-    //====================================================================================
-
-
-    public interface TrayAppHandler 
-    {
-        public void OnStartupTrayApp();
-        public void OnExitTrayApp();
-    }
 
 
     //====================================================================================

@@ -7,11 +7,11 @@ using System.Windows.Interop;
 
 namespace NotifiableTools;
 
-public partial class PopupTool : Window, IDisposable
+public partial class NotionUi : Window, IDisposable
 {
-    
 
-    public PopupTool(PopupType type, Action<IDictionary<String, String>> onSummit)
+
+    public NotionUi(UiType type, Action<IDictionary<string, string>> onSummit)
     {
 
         //UI初期化時に、なぜかDateTime.Now関連でNullReferenceExceptionが投げられる
@@ -32,7 +32,7 @@ public partial class PopupTool : Window, IDisposable
         this.Dispatcher.Invoke(() => this.Close());
     }
 
-    public enum PopupType
+    public enum UiType
     {
         Button
     }
