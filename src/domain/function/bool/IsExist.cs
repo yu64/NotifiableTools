@@ -18,7 +18,7 @@ public readonly record struct IsExist : IBoolFunction
     }
     
 
-    public async Task<bool> Call(IFunctionContext ctx)
+    public async Task<bool> Call(IRuleContext ctx)
     {   
         return (await this.Target.Call<dynamic>(ctx)) != null;
     }

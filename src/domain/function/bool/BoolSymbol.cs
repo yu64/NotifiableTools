@@ -17,7 +17,7 @@ public readonly record struct BoolSymbol : IBoolFunction
     }
 
 
-    public Task<bool> Call(IFunctionContext ctx)
+    public Task<bool> Call(IRuleContext ctx)
     {
         return Task.FromResult(this.Value);
     }

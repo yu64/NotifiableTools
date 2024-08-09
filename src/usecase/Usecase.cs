@@ -9,7 +9,7 @@ namespace NotifiableTools;
 
 public class Usecase
 {
-    public delegate IFunctionContext ContextFactory(Rule rule);
+    public delegate IRuleContext ContextFactory(Rule rule);
 
     private readonly ContextFactory createContext;
 

@@ -17,7 +17,7 @@ public readonly record struct StringSymbol : IStringFunction
     }
 
 
-    public Task<string> Call(IFunctionContext ctx)
+    public Task<string> Call(IRuleContext ctx)
     {
         return Task.FromResult(this.Value);
     }

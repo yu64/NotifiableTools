@@ -51,7 +51,8 @@ public class AppView
 
     public void ShowNotion(INotion notion)
     {
-        if(!this.showedNotions.ContainsKey(notion))
+        //すでに表示されていたら、何もしない
+        if(this.showedNotions.ContainsKey(notion))
         {
             return;
         }
@@ -79,6 +80,7 @@ public class AppView
 
     public void HideNotion(INotion notion)
     {
+        //すでに非表示ならば、何もしない
         if(!this.showedNotions.TryGetValue(notion, out IDisposable? ui))
         {
             return;

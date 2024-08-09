@@ -13,7 +13,7 @@ public readonly record struct FindFirstProcessByName(
 ) : IProcessFunction
 {
 
-    public async Task<Process?> Call(IFunctionContext ctx)
+    public async Task<Process?> Call(IRuleContext ctx)
     {
         return Process.GetProcessesByName(await this.Name.Call(ctx)).FirstOrDefault();
     }

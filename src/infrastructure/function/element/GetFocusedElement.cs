@@ -11,7 +11,7 @@ namespace NotifiableTools;
 public readonly record struct GetFocusedElement() : IUiElementFunction
 {
 
-    public Task<AutomationElement?> Call(IFunctionContext ctx)
+    public Task<AutomationElement?> Call(IRuleContext ctx)
     {
         var auto = ctx.GetOrCreateDisposable(() => new UIA3Automation());
         var ele = auto.FocusedElement();

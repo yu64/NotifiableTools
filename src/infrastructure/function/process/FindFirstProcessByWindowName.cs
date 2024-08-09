@@ -14,7 +14,7 @@ public readonly record struct FindFirstProcessByWindowName(
 ) : IProcessFunction
 {
 
-    public async Task<Process?> Call(IFunctionContext ctx)
+    public async Task<Process?> Call(IRuleContext ctx)
     {
         var name = await this.Name.Call(ctx);
         var canCheckSubString = this.CanCheckSubString;

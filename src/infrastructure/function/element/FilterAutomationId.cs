@@ -18,7 +18,7 @@ public readonly record struct FilterAutomationId(
 {
 
 
-    public async Task<AutomationElement?> Call(IFunctionContext ctx)
+    public async Task<AutomationElement?> Call(IRuleContext ctx)
     {
         var ele = await this.Element.Call(ctx);
 

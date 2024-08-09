@@ -20,7 +20,7 @@ public readonly record struct IsContain : IBoolFunction
         Part = part;
     }
 
-    public async Task<bool> Call(IFunctionContext ctx)
+    public async Task<bool> Call(IRuleContext ctx)
     {
         return (await this.All.Call(ctx)).Contains(await this.Part.Call(ctx));
     }

@@ -12,7 +12,7 @@ namespace NotifiableTools;
 public interface IAnyFunction
 {
 
-    public Task<T> Call<T>(IFunctionContext ctx)
+    public Task<T> Call<T>(IRuleContext ctx)
     {
         throw new Exception();
     }
@@ -22,7 +22,7 @@ public interface IAnyFunction
 [AllSubType()]
 public interface IAnyFunction<TResult> : IAnyFunction
 {
-    async Task<T> IAnyFunction.Call<T>(IFunctionContext ctx)
+    async Task<T> IAnyFunction.Call<T>(IRuleContext ctx)
     {
         //実行
         object? value = (await this.Call(ctx));
@@ -33,7 +33,7 @@ public interface IAnyFunction<TResult> : IAnyFunction
 #pragma warning restore
     }
 
-    public Task<TResult> Call(IFunctionContext ctx);
+    public Task<TResult> Call(IRuleContext ctx);
 }
 
 [AllSubType()]

@@ -2,14 +2,14 @@
 
 namespace NotifiableTools;
 
-public class FunctionContext : IFunctionContext
+public class RuleContext : IRuleContext
 {
     private Rule rule;
     private Dictionary<Type, IDisposable> commonPool = new();
     private Dictionary<(IAnyFunction, Type), IDisposable> ownerPool = new();
 
 
-    public FunctionContext(Rule rule)
+    public RuleContext(Rule rule)
     {
         this.rule = rule;
     }   
@@ -31,7 +31,7 @@ public class FunctionContext : IFunctionContext
 
     public void Dispose()
     {
-        this.ownerPool.Values.ToList().ForEach((v) => v.Dispose());
+        this.commonPool.Values.ToList().ForEach((v) => v.Dispose());
     }
 
 }

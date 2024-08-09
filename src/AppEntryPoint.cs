@@ -15,7 +15,7 @@ public class AppEntryPoint
         Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
 
 
-        var usecase = new Usecase((rule) => new FunctionContext(rule));
+        var usecase = new Usecase((rule) => new RuleContext(rule));
 
         var appController = new AppController(usecase);
         var app = new AppView(appController);
