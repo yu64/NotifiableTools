@@ -18,23 +18,23 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
     {
         
         var auto = ctx.GetOrCreateDisposable(() => new UIA3Automation());
-        var buf = ctx.GetOrCreateDisposable(() => new FocusedElementBuffer(auto));
+        var buf = ctx.GetOrCreateDisposable(() => new FocusedElementQueue(auto));
 
 
-        var result = await buf.GetAndRemoveFirst();
+        var result = await buf.Enqueue();
 
         return result;
     }
 
 
-    private class FocusedElementBuffer : IDisposable
+    private class FocusedElementQueue : IDisposable
     {   
         
         private FocusChangedEventHandlerBase handlerId;
 
         private Channel<AutomationElement> queue = Channel.CreateUnbounded<AutomationElement>();
 
-        public FocusedElementBuffer(AutomationBase auto)
+        public FocusedElementQueue(AutomationBase auto)
         {
             this.handlerId = auto.RegisterFocusChangedEvent(async (ele) => {
                 
@@ -48,7 +48,7 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
             });
         }
 
-        public async Task<AutomationElement> GetAndRemoveFirst()
+        public async Task<AutomationElement> Enqueue()
         {
             var ele = await queue.Reader.ReadAsync();
             return ele;

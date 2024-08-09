@@ -1,5 +1,7 @@
 
 
+using System.Collections.Concurrent;
+
 namespace NotifiableTools;
 
 
@@ -9,7 +11,7 @@ public class AppView
 
     private readonly CancellationTokenSource cts;
 
-    private readonly IDictionary<INotion, IDisposable> showedNotions = new Dictionary<INotion, IDisposable>();
+    private readonly IDictionary<INotion, IDisposable> showedNotions = new ConcurrentDictionary<INotion, IDisposable>();
 
     private TrayApp? trayApp;
 
@@ -24,6 +26,7 @@ public class AppView
 
     public void Start(RuleSet rules)
     {
+        this.trayApp = new TrayApp(this.Dispose);
 
         //WebSocketなどでもJS側で待ち受けているのでアーキテクチャ上問題ないはず
         this.controller.ObserveRules(
@@ -32,8 +35,8 @@ public class AppView
             (rule) => this.StopRule(rule),
             cts
         );
-        
-        this.trayApp = new TrayApp(this.Dispose);
+
+        this.trayApp.Run();
     }
 
     private void Dispose()
@@ -43,13 +46,16 @@ public class AppView
 
 
 
-    public void StartRule(Rule rule)
+    private void StartRule(Rule rule)
     {
         System.Console.WriteLine($"start {rule.Name}");
-        rule.Notions.ForEach((n) => this.ShowNotion(n));
+        
+        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+            rule.Notions.ForEach((n) => this.ShowNotion(n));
+        });
     }
 
-    public void ShowNotion(INotion notion)
+    private void ShowNotion(INotion notion)
     {
         //すでに表示されていたら、何もしない
         if(this.showedNotions.ContainsKey(notion))
@@ -60,7 +66,7 @@ public class AppView
         var ui = notion switch
         {
             Button impl => new NotionUi(NotionUi.UiType.Button, (args) => this.controller.Execute(notion, args)),
-            Tray impl => this.trayApp.RegisterMenuItem(notion, (args) => this.controller.Execute(notion, args)),
+            Tray impl => this.trayApp!.RegisterMenuItem(notion, (args) => this.controller.Execute(notion, args)),
             Pipe impl => new DisposableWrapper(
                     () => this.controller.Execute(impl, new Dictionary<string, string>()),
                     () => this.controller.Execute(impl, new Dictionary<string, string>())
@@ -72,13 +78,16 @@ public class AppView
         this.showedNotions.Add(notion, ui);
     }
 
-    public void StopRule(Rule rule)
+    private void StopRule(Rule rule)
     {
         System.Console.WriteLine($"stop {rule.Name}");
-        rule.Notions.ForEach((n) => this.HideNotion(n));
+        
+        System.Windows.Application.Current.Dispatcher.Invoke(() => {
+            rule.Notions.ForEach((n) => this.HideNotion(n));
+        });
     }
 
-    public void HideNotion(INotion notion)
+    private void HideNotion(INotion notion)
     {
         //すでに非表示ならば、何もしない
         if(!this.showedNotions.TryGetValue(notion, out IDisposable? ui))

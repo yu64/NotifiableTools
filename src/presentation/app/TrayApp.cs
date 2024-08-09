@@ -21,8 +21,6 @@ public partial class TrayApp : System.Windows.Application
     {
         this.handler = handler;
         this.InitializeComponent();
-
-        this.Run();
     }
 
 

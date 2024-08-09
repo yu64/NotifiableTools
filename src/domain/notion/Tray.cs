@@ -1,7 +1,7 @@
 namespace NotifiableTools;
 
 [AllSubType]
-public interface Tray : INotion
+public class Tray : INotion
 {
     
 }

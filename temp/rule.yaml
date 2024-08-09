@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=./schema.json
+
+Rules:
+  - IntervalMilliseconds: 100
+    Name: "ルールA"
+    Enable: true
+    Condition:
+      $type: IsExist
+      Target:
+        $type: FilterAutomationId
+        Element:
+          $type: GetFocusedElement
+        AutomationId:
+          $type: StringSymbol
+          Value: "15" #メモ帳
+    Notions:
+      - $type: Pipe
+
+  - IntervalMilliseconds: 100
+    Name: "ルールB"
+    Enable: true
+    Condition:
+      $type: IsExist
+      Target:
+        $type: FilterAutomationId
+        Element:
+          $type: GetFocusedElement
+        AutomationId:
+          $type: StringSymbol
+          Value: "15" #メモ帳
+    Notions:
+      - $type: Button
+      - $type: Tray
