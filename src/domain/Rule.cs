@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
+using System.Windows.Forms.VisualStyles;
 using Json.Schema.Generation;
 
 namespace NotifiableTools;
@@ -10,6 +11,7 @@ public readonly record struct Rule
     public string? Name { get; } = null;
 
     [Default(100)]
+    [Minimum(-1)]
     public int IntervalMilliseconds { get; } = 100;
 
     [Default(true)]

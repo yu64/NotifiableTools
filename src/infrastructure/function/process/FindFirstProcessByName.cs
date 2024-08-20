@@ -8,7 +8,9 @@ namespace NotifiableTools;
 [method: JsonConstructor]
 public readonly record struct FindFirstProcessByName(
 
-    [property: Required] IStringFunction Name
+    [property: Required] 
+    [property: Description("System.Diagnostics.Process.GetProcessesByNameで使用される名称")]
+    IStringFunction Name
 
 ) : IProcessFunction
 {

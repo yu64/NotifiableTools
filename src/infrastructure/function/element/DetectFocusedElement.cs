@@ -16,10 +16,10 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
 
     public async Task<AutomationElement?> Call(IRuleContext ctx)
     {
-        
-        var auto = ctx.GetOrCreateDisposable(() => new UIA3Automation());
-        var buf = ctx.GetOrCreateDisposable(() => new FocusedElementQueue(auto));
-
+        var buf = ctx.ruleSetContext.RunExclusively(
+            () => new UIA3Automation(),
+            (auto) => ctx.ruleSetContext.GetOrCreateDisposable(() => new FocusedElementQueue(auto))
+        );
 
         var result = await buf.Enqueue();
 
@@ -36,8 +36,9 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
 
         public FocusedElementQueue(AutomationBase auto)
         {
+            
             this.handlerId = auto.RegisterFocusChangedEvent(async (ele) => {
-                
+            
                 // 自分自身のプロセスに関係するものを除外
                 if(ele.Properties.ProcessId.ValueOrDefault == Environment.ProcessId)
                 {

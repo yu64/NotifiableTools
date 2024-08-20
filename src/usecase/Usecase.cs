@@ -44,7 +44,7 @@ public class Usecase
             //前回の判定結果
             var isMeetPrevCondition = false;
             
-            //無限ループ
+            //無限ループ(ループ間隔が負の数である場合、脱出)
             while(true)
             {
                 //タスクがキャンセルされたら脱出
@@ -71,10 +71,15 @@ public class Usecase
                 //前回の判定結果を保存
                 isMeetPrevCondition = isMeetCondition;
 
+                //ルールごとの待機時間が負数である場合、ループ終了
+                if(rule.IntervalMilliseconds < 0)
+                {
+                    break;
+                }
+
                 //ルールごとの待機時間分、待機する
                 Thread.Sleep(rule.IntervalMilliseconds);
             }
-
 
         }), TaskCreationOptions.LongRunning));
 

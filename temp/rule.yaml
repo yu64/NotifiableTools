@@ -30,4 +30,16 @@ Rules:
           Value: "15" #メモ帳
     Notions:
       - $type: Button
+
+  - IntervalMilliseconds: 100
+    Name: "ルールC"
+    Enable: true
+    Condition:
+      $type: IsExist
+      Target:
+        $type: FindFirstProcessByName
+        Name:
+          $type: StringSymbol
+          Value: "Taskmgr"
+    Notions:
       - $type: Tray
