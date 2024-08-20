@@ -5,41 +5,11 @@ Rules:
     Name: "ルールA"
     Enable: true
     Condition:
-      $type: IsExist
-      Target:
-        $type: FilterAutomationId
-        Element:
-          $type: GetFocusedElement
-        AutomationId:
-          $type: StringSymbol
-          Value: "15" #メモ帳
-    Notions:
-      - $type: Pipe
-
-  - IntervalMilliseconds: 100
-    Name: "ルールB"
-    Enable: true
-    Condition:
-      $type: IsExist
-      Target:
-        $type: FilterAutomationId
-        Element:
-          $type: GetFocusedElement
-        AutomationId:
-          $type: StringSymbol
-          Value: "15" #メモ帳
+      $type: BoolSymbol
+      Value: true
     Notions:
       - $type: Button
+        Title: "実行"
+        
 
-  - IntervalMilliseconds: 100
-    Name: "ルールC"
-    Enable: true
-    Condition:
-      $type: IsExist
-      Target:
-        $type: FindFirstProcessByName
-        Name:
-          $type: StringSymbol
-          Value: "Taskmgr"
-    Notions:
-      - $type: Tray
+

@@ -27,14 +27,18 @@
         </Button>
         -->
         
-        <!-- <Button 
-            x:Name="Button"
-            Visibility="Visible"
+        <Button 
+            x:Name="OnlyButton"
+            Visibility="Collapsed"
         >
-            Button2
-        </Button>  -->
+        </Button> 
 
-        <TextBox HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="497"/>
+        <!-- <TextBox 
+            HorizontalAlignment="Left" 
+            Height="23" 
+            VerticalAlignment="Top" 
+            Width="497"
+        /> -->
 
        
     </Grid>
