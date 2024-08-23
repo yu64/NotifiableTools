@@ -8,7 +8,7 @@ namespace NotifiableTools;
 public readonly record struct Button(
 
     String Title,
-    IPosition position
+    IPosition Position
 
 ) : INotion
 {

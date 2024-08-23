@@ -65,7 +65,7 @@ public class AppView
 
         var ui = notion switch
         {
-            Button impl => new NotionUi(impl, (args) => this.controller.Execute(notion, args)),
+            Button impl => new NotionButton(impl, (args) => this.controller.Execute(notion, args)),
             Tray impl => this.trayApp!.RegisterMenuItem(notion, (args) => this.controller.Execute(notion, args)),
             Pipe impl => new DisposableWrapper(
                     () => this.controller.Execute(impl, new Dictionary<string, string>()),
