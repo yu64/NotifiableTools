@@ -7,8 +7,9 @@ namespace NotifiableTools;
 
 public readonly record struct Button(
 
-    String Title,
-    IPosition Position
+    [property: Required] string Title,
+    [property: Required] IPosition Position,
+    [property: Required] ActionDefinition Action
 
 ) : INotion
 {

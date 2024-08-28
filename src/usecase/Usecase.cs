@@ -15,13 +15,17 @@ public class Usecase
     private readonly RuleSetContextFactory createRuleSetContext;
     private readonly RuleContextFactory createRuleContext;
 
+    private readonly IActionExecutor executor;
+
     public Usecase(
         RuleSetContextFactory createRuleSetContext,
-        RuleContextFactory createRuleContext
+        RuleContextFactory createRuleContext,
+        IActionExecutor executor
     ) 
     {
         this.createRuleSetContext = createRuleSetContext;
         this.createRuleContext = createRuleContext;
+        this.executor = executor;
     }
 
 
@@ -118,4 +122,11 @@ public class Usecase
         };
     }
     
+
+
+    public void Execute(ActionArgs args)
+    {
+        this.executor.Execute(args);
+    }
+
 }

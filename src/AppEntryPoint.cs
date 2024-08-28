@@ -17,7 +17,8 @@ public class AppEntryPoint
 
         var usecase = new Usecase(
             (ruleSet) => new RuleSetContext(ruleSet),
-            (ctx, rule) => new RuleContext(ctx, rule)
+            (ctx, rule) => new RuleContext(ctx, rule),
+            new ActionExecute()
         );
 
         var appController = new AppController(usecase);

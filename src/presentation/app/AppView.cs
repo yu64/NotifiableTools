@@ -51,11 +51,11 @@ public class AppView
         System.Console.WriteLine($"start {rule.Name}");
         
         System.Windows.Application.Current.Dispatcher.Invoke(() => {
-            rule.Notions.ForEach((n) => this.ShowNotion(n));
+            rule.Notions.ForEach((n) => this.ShowNotion(rule, n));
         });
     }
 
-    private void ShowNotion(INotion notion)
+    private void ShowNotion(Rule rule, INotion notion)
     {
         //すでに表示されていたら、何もしない
         if(this.showedNotions.ContainsKey(notion))
@@ -63,13 +63,21 @@ public class AppView
             return;
         }
 
+        var args = new ActionArgs(
+            ActionDefinition.NULL,
+            rule,
+            notion,
+            Timing.Start
+        );
+
+
         var ui = notion switch
         {
-            Button impl => new NotionButton(impl, (args) => this.controller.Execute(notion, args)),
-            Tray impl => this.trayApp!.RegisterMenuItem(notion, (args) => this.controller.Execute(notion, args)),
+            Button impl => new NotionButton(impl, () => this.controller.Execute(args with {Action = impl.Action})),
+            Tray impl => this.trayApp!.RegisterMenuItem(notion, () => this.controller.Execute(args with {Action = impl.Action})),
             Pipe impl => new DisposableWrapper(
-                    () => this.controller.Execute(impl, new Dictionary<string, string>()),
-                    () => this.controller.Execute(impl, new Dictionary<string, string>())
+                    () => this.controller.Execute(args with {Action = impl.StartAction}),
+                    () => this.controller.Execute(args with {Action = impl.StopAction, Timing = Timing.Stop})
                 ),
 
             _ => throw new Exception("Notionに対応するUIがありません")
@@ -83,11 +91,11 @@ public class AppView
         System.Console.WriteLine($"stop {rule.Name}");
         
         System.Windows.Application.Current.Dispatcher.Invoke(() => {
-            rule.Notions.ForEach((n) => this.HideNotion(n));
+            rule.Notions.ForEach((n) => this.HideNotion(rule, n));
         });
     }
 
-    private void HideNotion(INotion notion)
+    private void HideNotion(Rule rule, INotion notion)
     {
         //すでに非表示ならば、何もしない
         if(!this.showedNotions.TryGetValue(notion, out IDisposable? ui))

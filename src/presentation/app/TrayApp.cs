@@ -13,7 +13,7 @@ public partial class TrayApp : System.Windows.Application
     public delegate void OnExitTrayApp();
 
     private NotifyIcon? trayIcon;
-    private ContextMenuStrip menu;
+    private ContextMenuStrip? menu;
 
     private OnExitTrayApp handler;
 
@@ -68,9 +68,9 @@ public partial class TrayApp : System.Windows.Application
 
 
 
-    public IDisposable RegisterMenuItem(INotion notion, Action<IDictionary<string, string>> onSubmit)
+    public IDisposable RegisterMenuItem(INotion notion, Action onSubmit)
     {
-        var item = this.menu.Items.Add("項目", null, (sender, args) => onSubmit(new Dictionary<string, string>()));
+        var item = this.menu!.Items.Add("項目", null, (sender, args) => onSubmit());
         return new DisposableWrapper(() => this.menu.Items.Remove(item));
     }
 

@@ -30,8 +30,8 @@ public class AppController
         );
     }
 
-    internal void Execute(INotion notion, IDictionary<string, string> args)
+    internal void Execute(ActionArgs args)
     {
-        System.Console.WriteLine(args);
+        usecase.Execute(args);
     }
 }

@@ -14,28 +14,6 @@ Rules:
           $type: MouseCircle
           Angle: 45
           Radius: 50
-      - $type: Button
-        Title: "実行B"
-        Position:
-          $type: MouseCircle
-          Angle: 90
-          Radius: 50
-      - $type: Button
-        Title: "実行C"
-        Position:
-          $type: MouseCircle
-          Angle: 135
-          Radius: 50
-      - $type: Button
-        Title: "実行D"
-        Position:
-          $type: TopLeft
-      - $type: Button
-        Title: "実行E"
-        Position:
-          $type: ButtomRight
-
-
-        
-
-
+        Action:
+          CommandTemplate: "powershell -Command start http://{Notions[0].Title}.com"
+      
