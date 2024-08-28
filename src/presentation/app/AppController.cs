@@ -18,8 +18,8 @@ public class AppController
 
     public CancellationTokenSource ObserveRules(
         RuleSet rules, 
-        Action<Rule> tellStart, 
-        Action<Rule> tellStop, 
+        Action<IRuleContext, Rule> tellStart, 
+        Action<IRuleContext, Rule> tellStop, 
         CancellationTokenSource cts)
     {
         return this.usecase.ObserveRules(

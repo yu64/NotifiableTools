@@ -31,8 +31,8 @@ public class Usecase
 
     public CancellationTokenSource ObserveRules(
         RuleSet ruleSet, 
-        Action<Rule> tellStart, 
-        Action<Rule> tellStop,
+        Action<IRuleContext, Rule> tellStart, 
+        Action<IRuleContext, Rule> tellStop,
         CancellationTokenSource? cts = null
     )
     {
@@ -63,13 +63,13 @@ public class Usecase
                 //false => true
                 if(!isMeetPrevCondition && isMeetCondition)
                 {
-                    tellStart(rule);
+                    tellStart(ctx, rule);
                 }
 
                 //true => false
                 if(isMeetPrevCondition && !isMeetCondition)
                 {
-                    tellStop(rule);
+                    tellStop(ctx, rule);
                 }
 
                 //前回の判定結果を保存

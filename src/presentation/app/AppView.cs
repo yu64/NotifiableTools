@@ -31,8 +31,8 @@ public class AppView
         //WebSocketなどでもJS側で待ち受けているのでアーキテクチャ上問題ないはず
         this.controller.ObserveRules(
             rules, 
-            (rule) => this.StartRule(rule),
-            (rule) => this.StopRule(rule),
+            (ctx, rule) => this.StartRule(ctx, rule),
+            (ctx, rule) => this.StopRule(ctx, rule),
             cts
         );
 
@@ -46,16 +46,16 @@ public class AppView
 
 
 
-    private void StartRule(Rule rule)
+    private void StartRule(IRuleContext ctx, Rule rule)
     {
         System.Console.WriteLine($"start {rule.Name}");
         
         System.Windows.Application.Current.Dispatcher.Invoke(() => {
-            rule.Notions.ForEach((n) => this.ShowNotion(rule, n));
+            rule.Notions.ForEach((n) => this.ShowNotion(ctx, rule, n));
         });
     }
 
-    private void ShowNotion(Rule rule, INotion notion)
+    private void ShowNotion(IRuleContext ctx, Rule rule, INotion notion)
     {
         //すでに表示されていたら、何もしない
         if(this.showedNotions.ContainsKey(notion))
@@ -86,16 +86,16 @@ public class AppView
         this.showedNotions.Add(notion, ui);
     }
 
-    private void StopRule(Rule rule)
+    private void StopRule(IRuleContext ctx, Rule rule)
     {
         System.Console.WriteLine($"stop {rule.Name}");
         
         System.Windows.Application.Current.Dispatcher.Invoke(() => {
-            rule.Notions.ForEach((n) => this.HideNotion(rule, n));
+            rule.Notions.ForEach((n) => this.HideNotion(ctx, rule, n));
         });
     }
 
-    private void HideNotion(Rule rule, INotion notion)
+    private void HideNotion(IRuleContext ctx, Rule rule, INotion notion)
     {
         //すでに非表示ならば、何もしない
         if(!this.showedNotions.TryGetValue(notion, out IDisposable? ui))
