@@ -12,7 +12,7 @@ namespace NotifiableTools;
 public interface IAnyFunction
 {
 
-    public Task<T> Call<T>(IRuleContext ctx)
+    public Task<T> CallDynamic<T>(IRuleContext ctx)
     {
         throw new Exception();
     }
@@ -22,7 +22,7 @@ public interface IAnyFunction
 [AllSubType()]
 public interface IAnyFunction<TResult> : IAnyFunction
 {
-    async Task<T> IAnyFunction.Call<T>(IRuleContext ctx)
+    async Task<T> IAnyFunction.CallDynamic<T>(IRuleContext ctx)
     {
         //実行
         object? value = (await this.Call(ctx));
@@ -36,26 +36,17 @@ public interface IAnyFunction<TResult> : IAnyFunction
     public Task<TResult> Call(IRuleContext ctx);
 }
 
-[AllSubType()]
-public interface IBoolFunction : IAnyFunction<bool>
-{
 
-}
 
 [AllSubType()]
-public interface IStringFunction : IAnyFunction<string>
-{
-
-}
+public interface IBoolFunction : IAnyFunction<bool>;
 
 [AllSubType()]
-public interface IUiElementFunction : IAnyFunction<AutomationElement?>
-{
-
-}
+public interface IStringFunction : IAnyFunction<string>;
 
 [AllSubType()]
-public interface IProcessFunction : IAnyFunction<Process?>
-{
+public interface IUiElementFunction : IAnyFunction<AutomationElement?>;
 
-}
+[AllSubType()]
+public interface IProcessFunction : IAnyFunction<Process?>;
+

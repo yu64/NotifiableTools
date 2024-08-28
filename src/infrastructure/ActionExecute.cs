@@ -31,12 +31,11 @@ public class ActionExecute : IActionExecutor
                     new ReflectionSource()
                 );
 
-            command = smart.Format(action.CommandTemplate, args);
+            command = SmartFormatUtil.Format(action.CommandTemplate, args);
         }
         catch(Exception ex)
         {
-            Console.Error.WriteLine($"コマンドテンプレートの解釈に失敗しました。Template:{action.CommandTemplate}, Args:{args}");
-            Console.Error.WriteLine(ex.Message);
+            SmartFormatUtil.PrintErrorMessage(ex, action.CommandTemplate, args);
             return;
         }
 

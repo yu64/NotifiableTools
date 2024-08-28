@@ -94,7 +94,14 @@ internal class SubTypeRefiner : ISchemaRefiner
             return;
         }
         
-        var list = (new Attribute[]{new ConstAttribute(type.Name), new RequiredAttribute()}).ToList();
+        var list = new List<Attribute>()
+        {
+            new ConstAttribute(type.Name),
+            new RequiredAttribute(),
+            type.GetCustomAttribute<DescriptionAttribute>() ?? new DescriptionAttribute("SubType Name")
+        };
+
+
         var typeNameContext = SchemaGenerationContextCache.Get(typeof(string), list);
 
         //サブクラスの型情報プロパティを先頭に追記(値はサブクラスに対応した定数)

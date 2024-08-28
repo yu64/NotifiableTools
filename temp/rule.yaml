@@ -5,8 +5,13 @@ Rules:
     Name: "ルールA"
     Enable: true
     Condition:
-      $type: BoolSymbol
-      Value: true
+      $type: IsExist
+      Target: 
+        $type: Print
+        Format: "{0}"
+        Src:
+          $type: GetFocusedElement
+        
     Notions:
       - $type: Button
         Title: "実行A"

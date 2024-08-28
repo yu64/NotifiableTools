@@ -4,6 +4,7 @@ using Json.Schema.Generation;
 namespace NotifiableTools;
 
 
+[Description("値が存在するか(= nullではないか)判定する")]
 public readonly record struct IsExist : IBoolFunction
 {
     [Required]
@@ -20,6 +21,6 @@ public readonly record struct IsExist : IBoolFunction
 
     public async Task<bool> Call(IRuleContext ctx)
     {   
-        return (await this.Target.Call<dynamic>(ctx)) != null;
+        return (await this.Target.CallDynamic<dynamic>(ctx)) != null;
     }
 }
