@@ -39,12 +39,7 @@ public readonly record struct DetectFocusedElement() : IUiElementFunction
             
             this.handlerId = auto.RegisterFocusChangedEvent(async (ele) => {
             
-                // 自分自身のプロセスに関係するものを除外
-                if(ele.Properties.ProcessId.ValueOrDefault == Environment.ProcessId)
-                {
-                    return;
-                }
-
+  
                 await queue.Writer.WriteAsync(ele);
             });
         }

@@ -18,6 +18,8 @@ public class ActionExecute : IActionExecutor
             return;
         }
 
+        System.Console.WriteLine(args.Custom["Test"]);
+
         string command;
         try
         {

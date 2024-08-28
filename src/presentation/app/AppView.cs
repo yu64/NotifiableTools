@@ -67,7 +67,8 @@ public class AppView
             ActionDefinition.NULL,
             rule,
             notion,
-            Timing.Start
+            Timing.Start,
+            ctx.customArgs
         );
 
 

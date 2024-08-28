@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NotifiableTools;
 
-public readonly record struct SaveCommandArg (
+public readonly record struct SaveActionArg (
 
 
-    [property: Required] String Name,
+    [property: Required] string Name,
     [property: Required] IAnyFunction Src
 
 ) : IFunctionPipe
@@ -16,6 +16,7 @@ public readonly record struct SaveCommandArg (
     
     Task<T> IFunctionPipe.CallPipe<T>(IRuleContext ctx, T src)
     {
+        ctx.customArgs[this.Name] = src;
         return Task.FromResult(src);
     }
 }

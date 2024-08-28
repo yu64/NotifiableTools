@@ -19,12 +19,6 @@ public readonly record struct GetFocusedElement() : IUiElementFunction
         );
         
 
-        // 自分自身のプロセスに関係するものを除外
-        if(ele.Properties.ProcessId.ValueOrDefault == Environment.ProcessId)
-        {
-            return Task.FromResult<AutomationElement?>(null);
-        }
-
         return Task.FromResult<AutomationElement?>(ele);
     }
 

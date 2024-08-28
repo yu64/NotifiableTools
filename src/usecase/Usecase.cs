@@ -53,8 +53,6 @@ public class Usecase
             {
                 //タスクがキャンセルされたら脱出
                 cts.Token.ThrowIfCancellationRequested();
-
-                System.Console.WriteLine($"check {rule.Name}");
                 
                 //ルールの条件を判定
                 var isMeetCondition = await rule.Condition.Call(ctx);

@@ -6,15 +6,17 @@ public class RuleContext : IRuleContext
 {
 
     public IRuleSetContext ruleSetContext { get; }
+    public IDictionary<string, object?> customArgs { get; }
+
 
     private readonly Rule rule;
     private readonly Dictionary<Type, IDisposable> commonPool = new();
-
 
     public RuleContext(IRuleSetContext ruleSetContext, Rule rule)
     {
         this.ruleSetContext = ruleSetContext;
         this.rule = rule;
+        this.customArgs = new Dictionary<string, object?>();
     }   
 
     
