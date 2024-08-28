@@ -15,5 +15,5 @@ Rules:
           Angle: 45
           Radius: 50
         Action:
-          CommandTemplate: "powershell -Command start http://{Notions[0].Title}.com"
+          CommandTemplate: "powershell -Command start http://{Notion.Title}.com"
       

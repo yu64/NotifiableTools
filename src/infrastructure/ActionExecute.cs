@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using Cysharp.Diagnostics;
 using SmartFormat;
+using SmartFormat.Extensions;
 
 namespace NotifiableTools;
 
@@ -20,7 +21,17 @@ public class ActionExecute : IActionExecutor
         string command;
         try
         {
-            command = Smart.Format(action.CommandTemplate, args);
+            var smart = new SmartFormatter()
+                .AddExtensions(new DefaultFormatter())
+                .AddExtensions(
+                    new DefaultSource(), 
+                    new StringSource(), 
+                    new DictionarySource(),
+                    new ValueTupleSource(),
+                    new ReflectionSource()
+                );
+
+            command = smart.Format(action.CommandTemplate, args);
         }
         catch(Exception ex)
         {
