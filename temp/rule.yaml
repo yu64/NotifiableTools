@@ -23,6 +23,7 @@ Rules:
           Angle: 45
           Radius: 50
         Action:
-          CommandTemplate: "cmd.exe /k echo \"{Custom.Test.Name}\""
+          CommandTemplate: "cmd.exe /k echo \"%CD%\""
           CanStdOut: true
+          Encoding: "Shift_JIS"
       

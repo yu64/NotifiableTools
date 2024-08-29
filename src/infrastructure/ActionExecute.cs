@@ -2,6 +2,8 @@
 
 using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
+using System.IO;
+using System.Text;
 using Cysharp.Diagnostics;
 using SmartFormat;
 using SmartFormat.Extensions;
@@ -10,6 +12,13 @@ namespace NotifiableTools;
 
 public class ActionExecute : IActionExecutor
 {
+    
+    static ActionExecute()
+    {
+        //クラス読み込み時に、Encodingの準備をしておく
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+    }
+
     public void Execute(ActionArgs args)
     {
         ActionDefinition action = args.Action;
@@ -58,10 +67,13 @@ public class ActionExecute : IActionExecutor
     {
         ActionDefinition action = args.Action;
         try
-        {
+        {   
+            var encoding = Encoding.GetEncoding(action.Encoding);
+            var cwd = Directory.GetCurrentDirectory();
+
             Task.Run(async () => {
 
-                await foreach(var item in ProcessX.StartAsync(command))
+                await foreach(var item in ProcessX.StartAsync(command, workingDirectory: cwd, encoding: encoding))
                 {
                     if(action.CanStdOut)
                     {

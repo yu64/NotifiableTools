@@ -10,7 +10,11 @@ public readonly record struct ActionDefinition (
     
     [property: Default(false)]
     [property: Description("標準出力可能か")]
-    bool CanStdOut = false
+    bool CanStdOut = false,
+    
+    [property: Default("UTF-8")]
+    [property: Description("標準出力の文字コード")]
+    string Encoding = "UTF-8"
 
 )
 {

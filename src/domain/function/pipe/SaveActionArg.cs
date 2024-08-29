@@ -1,7 +1,9 @@
 
 
 
+using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using Json.Schema.Generation;
@@ -63,19 +65,27 @@ file interface ISaveFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> whe
     }
 
 
-    private static IDictionary<string, object?> ToDictonary(AutomationElement ele)
+    private static ImmutableDictionary<string, object?> ToDictonary(AutomationElement ele)
     {
-        var prop = ele.Properties;
-        var propType = prop.GetType();
+        try
+        {
+            var prop = ele.Properties;
+            var propType = prop.GetType();
 
-        IDictionary<string, object?> dict = propType.GetProperties()
-        .Where((p) => p.PropertyType.IsGenericType)
-        .Where((p) => p.PropertyType.GetGenericTypeDefinition() == typeof(AutomationProperty<>))
-        .Select((p) => (p.Name, (dynamic?)p.GetValue(prop)))
-        .ToDictionary((t) => t.Name, (t) => (object?) t.Item2?.ValueOrDefault)
-        ;
+            var dict = propType.GetProperties()
+            .Where((p) => p.PropertyType.IsGenericType)
+            .Where((p) => p.PropertyType.GetGenericTypeDefinition() == typeof(AutomationProperty<>))
+            .Select((p) => (p.Name, (dynamic?)p.GetValue(prop)))
+            .ToDictionary((t) => t.Name, (t) => (object?) t.Item2?.ValueOrDefault)
+            .ToImmutableDictionary()
+            ;
 
-        return dict;
+            return dict;
+        }
+        catch(COMException)
+        {
+            return ImmutableDictionary.Create<string, object?>();
+        }
     }
 }
 
