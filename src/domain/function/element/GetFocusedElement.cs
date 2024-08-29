@@ -21,11 +21,12 @@ public readonly record struct GetFocusedElement() : IUiElementFunction
                 (auto) => auto.FocusedElement()
             );
             
+            ctx.SetVariable(this, ele);
             return Task.FromResult<AutomationElement?>(ele);
         }
         catch (COMException)
         {
-            return Task.FromResult<AutomationElement?>(null);
+            return Task.FromResult(ctx.GetVariable<AutomationElement?>(this));
         }
     }
 

@@ -42,19 +42,31 @@ Rules:
   - IntervalMilliseconds: 100
     Enable: true
     Condition:
-      $type: IsExist
-      Target:
-        $type: SaveElementToActionArg
-        Name: "Target"
-        Value:
-          $type: FilterAutomationId
-          Element:
-            $type: PrintElement
+      $type: PrintBool
+      Value:
+        $type: Or
+        Left:
+          $type: IsExist
+          Target:
+            $type: SaveElementToActionArg
+            Name: "Target"
             Value:
+              $type: FilterAutomationId
+              Element:
+                $type: GetFocusedElement
+              AutomationId:
+                $type: StringSymbol
+                Value: "FunctionsList"
+        Right:
+          $type: IsExist
+          Target:
+            $type: FilterProcess
+            Element:
               $type: GetFocusedElement
-          AutomationId:
-            $type: StringSymbol
-            Value: "FunctionsList"
+            Process:
+              $type: GetCurrentProcess
+      
+
     Notions:
       - $type: TextBox
         DefaultText: ""

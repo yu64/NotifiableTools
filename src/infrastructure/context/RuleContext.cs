@@ -11,6 +11,8 @@ public class RuleContext : IRuleContext
 
     private readonly Rule rule;
     private readonly Dictionary<Type, IDisposable> commonPool = new();
+    private readonly Dictionary<IAnyFunction, dynamic> localVariable = new();
+
 
     public RuleContext(IRuleSetContext ruleSetContext, Rule rule)
     {
@@ -31,6 +33,16 @@ public class RuleContext : IRuleContext
         var newValue = factory();
         commonPool.Add(typeof(T), newValue);
         return newValue;
+    }
+
+    public void SetVariable(IAnyFunction key, object value)
+    {
+        this.localVariable[key] = value;
+    }
+
+    public T GetVariable<T>(IAnyFunction key)
+    {
+        return this.localVariable[key];
     }
 
 
