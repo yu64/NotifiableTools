@@ -26,4 +26,15 @@ Rules:
           CommandTemplate: "cmd.exe /k echo \"%CD%\""
           CanStdOut: true
           Encoding: "Shift_JIS"
+
+      - $type: TextBox
+        DefaultText: "入力欄"
+        Position:
+          $type: MouseCircle
+          Angle: 180
+          Radius: 50 
+        Action:
+          CommandTemplate: "cmd.exe /k echo \"{InputText}\""
+          CanStdOut: true
+          Encoding: UTF-8
       

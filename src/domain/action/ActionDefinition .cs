@@ -6,7 +6,9 @@ namespace NotifiableTools;
 
 public readonly record struct ActionDefinition (
 
-    [property: Description("SmartFormat")] string CommandTemplate,
+    [property: Required]
+    [property: Description("SmartFormat")] 
+    string CommandTemplate,
     
     [property: Default(false)]
     [property: Description("標準出力可能か")]

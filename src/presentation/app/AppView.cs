@@ -68,6 +68,7 @@ public class AppView
             rule,
             notion,
             Timing.Start,
+            "",
             ctx.customArgs
         );
 
@@ -75,6 +76,7 @@ public class AppView
         var ui = notion switch
         {
             Button impl => new NotionButton(impl, () => this.controller.Execute(args with {Action = impl.Action})),
+            TextBox impl => new NotionTextBox(impl, (text) => this.controller.Execute(args with {Action = impl.Action, InputText = text})),
             Tray impl => this.trayApp!.RegisterMenuItem(notion, () => this.controller.Execute(args with {Action = impl.Action})),
             Pipe impl => new DisposableWrapper(
                     () => this.controller.Execute(args with {Action = impl.StartAction}),

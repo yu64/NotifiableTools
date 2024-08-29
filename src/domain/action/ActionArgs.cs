@@ -8,6 +8,7 @@ public readonly record struct ActionArgs(
     Rule Rule,
     INotion Notion,
     Timing Timing,
+    string InputText,
     IDictionary<string, object?> Custom
 
 );
