@@ -1,25 +1,49 @@
 
-
-
+using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using FlaUI.Core.AutomationElements;
 using Json.Schema.Generation;
-using SmartFormat;
-using SmartFormat.Extensions;
 
 namespace NotifiableTools;
 
-[Description("[副作用] 指定された値を標準出力に与える")]
-public readonly record struct Print (
 
-    [property: Nullable(true)] 
-    [property: Description("SmartFormat")] 
-    string Format,
+public readonly record struct PrintBool(
 
-    [property: Required] IAnyFunction Src
+    [property: Description("SmartFormat")] string Format,
+    [property: Required] IBoolFunction Value
 
-) : IFunctionPipe
+) : IBoolFunction, IPrintFunction<IBoolFunction, bool>;
+
+public readonly record struct PrintString(
+
+    [property: Description("SmartFormat")] string Format,
+    [property: Required] IStringFunction Value
+
+) : IStringFunction, IPrintFunction<IStringFunction, string>;
+
+public readonly record struct PrintElement(
+
+    [property: Description("SmartFormat")] string Format,
+    [property: Required] IUiElementFunction Value
+
+) : IUiElementFunction, IPrintFunction<IUiElementFunction, AutomationElement?>;
+
+public readonly record struct PrintProcess(
+
+    [property: Description("SmartFormat")] string Format,
+    [property: Required] IProcessFunction Value
+
+) : IProcessFunction, IPrintFunction<IProcessFunction, Process?>;
+
+
+
+
+
+interface IPrintFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> where TFunc : IAnyFunction<TReturn>
 {
-    
-    Task<T> IFunctionPipe.CallPipe<T>(IRuleContext ctx, T src)
+    public string Format { get; }
+
+    Task<TReturn> IPipeFunction<TFunc, TReturn>.CallPipe(IRuleContext ctx, TReturn src)
     {
         if(String.IsNullOrWhiteSpace(this.Format))
         {
@@ -39,4 +63,5 @@ public readonly record struct Print (
             return Task.FromResult(src);
         }
     }
+
 }

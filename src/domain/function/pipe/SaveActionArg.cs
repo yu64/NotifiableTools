@@ -1,39 +1,63 @@
 
 
 
+using System.Diagnostics;
 using FlaUI.Core.AutomationElements;
 using Json.Schema.Generation;
 
 namespace NotifiableTools;
 
-[Description("[副作用] 指定された値をActionの引数(Custom配下)として保存する。AutomationElementは加工される")]
-public readonly record struct SaveActionArg (
 
+
+public readonly record struct SaveBoolToActionArg (
 
     [property: Required] string Name,
-    [property: Required] IAnyFunction Src,
+    [property: Required] IBoolFunction Value
 
-    [property: Nullable(true)] 
-    [property: Description("戻り値")]
-    IAnyFunction Output
+) : IBoolFunction, ISaveFunction<IBoolFunction, bool>;
+
+public readonly record struct SaveStringToActionArg (
+
+    [property: Required] string Name,
+    [property: Required] IStringFunction Value
+
+) : IStringFunction, ISaveFunction<IStringFunction, string>;
+
+public readonly record struct SaveElementToActionArg (
+
+    [property: Required] string Name,
+    [property: Required] IUiElementFunction Value
+
+) : IUiElementFunction, ISaveFunction<IUiElementFunction, AutomationElement?>;
+
+public readonly record struct SaveProcessToActionArg (
+
+    [property: Required] string Name,
+    [property: Required] IProcessFunction Value
+
+) : IProcessFunction, ISaveFunction<IProcessFunction, Process?>;
 
 
-) : IFunctionPipe
+
+
+
+file interface ISaveFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> where TFunc : IAnyFunction<TReturn>
 {
-    
-    Task<T> IFunctionPipe.CallPipe<T>(IRuleContext ctx, T src)
+    public string Name { get; }
+
+    Task<TReturn> IPipeFunction<TFunc, TReturn>.CallPipe(IRuleContext ctx, TReturn src)
     {
         ctx.customArgs[this.Name] = src switch
         {
             AutomationElement ele => ele.Properties,
             _ => src
         };
-        
-        if(this.Output != null)
-        {
-            return this.Output.CallDynamic<T>(ctx);
-        }
 
         return Task.FromResult(src);
     }
+
 }
+
+
+
+

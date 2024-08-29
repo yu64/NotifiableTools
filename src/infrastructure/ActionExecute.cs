@@ -18,8 +18,6 @@ public class ActionExecute : IActionExecutor
             return;
         }
 
-        System.Console.WriteLine(args.Custom["Test"]); //デッドロック?
-
         string command;
         try
         {
@@ -43,7 +41,13 @@ public class ActionExecute : IActionExecutor
 
         try
         {
-            ProcessX.StartAsync(command);
+            Task.Run(async () => {
+
+                await foreach(var item in ProcessX.StartAsync(command))
+                {
+                    System.Console.WriteLine(item);
+                }
+            });
         }
         catch(Exception ex)
         {

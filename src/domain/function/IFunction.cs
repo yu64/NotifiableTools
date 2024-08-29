@@ -36,8 +36,6 @@ public interface IAnyFunction<TResult> : IAnyFunction
     public Task<TResult> Call(IRuleContext ctx);
 }
 
-
-
 [AllSubType()]
 public interface IBoolFunction : IAnyFunction<bool>;
 

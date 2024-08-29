@@ -23,7 +23,7 @@ public readonly record struct GetFocusedElement() : IUiElementFunction
             
             return Task.FromResult<AutomationElement?>(ele);
         }
-        catch(COMException ex)
+        catch(COMException _)
         {
             return Task.FromResult<AutomationElement?>(null);
         }

@@ -6,10 +6,7 @@ namespace NotifiableTools;
 
 public readonly record struct Format (
 
-    [property: Nullable(true)] 
-    [property: Description("SmartFormat")] 
-    string Template,
-
+    [property: Description("SmartFormat")] string Template,
     [property: Required] IAnyFunction Value
 
 ) : IStringFunction

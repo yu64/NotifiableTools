@@ -7,13 +7,13 @@ Rules:
     Condition:
       $type: IsExist
       Target: 
-        $type: SaveActionArg
-        Name: Test
-        Src:
-          $type: Print
-          Format: "Element => {0}"
-          Src:
+        $type: SaveElementToActionArg
+        Name: "Test"
+        Value:
+          $type: PrintElement
+          Value:
             $type: GetFocusedElement
+
         
     Notions:
       - $type: Button
@@ -23,5 +23,5 @@ Rules:
           Angle: 45
           Radius: 50
         Action:
-          CommandTemplate: "cmd.exe \"{Custom.Test}\""
+          CommandTemplate: "cmd.exe /k echo \"{Custom.Test}\""
       
