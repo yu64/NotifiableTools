@@ -18,7 +18,20 @@ public class ActionExecute : IActionExecutor
             return;
         }
 
-        string command;
+        var command = this.FormatCommand(args);
+        if(string.IsNullOrWhiteSpace(command))
+        {
+            return;
+        }
+
+        this.RunCommand(args, command);
+    }
+    
+
+    private string FormatCommand(ActionArgs args)
+    {
+        ActionDefinition action = args.Action;
+
         try
         {
             var smart = new SmartFormatter()
@@ -31,21 +44,29 @@ public class ActionExecute : IActionExecutor
                     new ReflectionSource()
                 );
 
-            command = SmartFormatUtil.Format(action.CommandTemplate, args);
+            return SmartFormatUtil.Format(action.CommandTemplate, args);
         }
         catch(Exception ex)
         {
             SmartFormatUtil.PrintErrorMessage(ex, action.CommandTemplate, args);
-            return;
+            return "";
         }
+    }
 
+
+    private void RunCommand(ActionArgs args, string command)
+    {
+        ActionDefinition action = args.Action;
         try
         {
             Task.Run(async () => {
 
                 await foreach(var item in ProcessX.StartAsync(command))
                 {
-                    System.Console.WriteLine(item);
+                    if(action.CanStdOut)
+                    {
+                        System.Console.WriteLine(item);
+                    }
                 }
             });
         }
@@ -53,7 +74,18 @@ public class ActionExecute : IActionExecutor
         {
             Console.Error.WriteLine($"コマンドの実行に失敗しました。Command:({command}), Template:({action.CommandTemplate}), Args:({args})");
             Console.Error.WriteLine(ex.Message);
-            return;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

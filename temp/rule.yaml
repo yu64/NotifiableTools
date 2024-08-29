@@ -23,5 +23,6 @@ Rules:
           Angle: 45
           Radius: 50
         Action:
-          CommandTemplate: "cmd.exe /k echo \"{Custom.Test}\""
+          CommandTemplate: "cmd.exe /k echo \"{Custom.Test.Name}\""
+          CanStdOut: true
       

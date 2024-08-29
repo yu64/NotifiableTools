@@ -2,13 +2,16 @@
 
 
 using System.Diagnostics;
+using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using Json.Schema.Generation;
+using SmartFormat.Utilities;
 
 namespace NotifiableTools;
 
 
 
+[Description("指定された値をAction用の引数として保存します。Custom.Fooでアクセス。")]
 public readonly record struct SaveBoolToActionArg (
 
     [property: Required] string Name,
@@ -16,6 +19,7 @@ public readonly record struct SaveBoolToActionArg (
 
 ) : IBoolFunction, ISaveFunction<IBoolFunction, bool>;
 
+[Description("指定された値をAction用の引数として保存します。Custom.Fooでアクセス。")]
 public readonly record struct SaveStringToActionArg (
 
     [property: Required] string Name,
@@ -23,6 +27,7 @@ public readonly record struct SaveStringToActionArg (
 
 ) : IStringFunction, ISaveFunction<IStringFunction, string>;
 
+[Description("指定された値をAction用の引数として保存します。Custom.Fooでアクセス。プロパティ情報のみに加工されます。")]
 public readonly record struct SaveElementToActionArg (
 
     [property: Required] string Name,
@@ -30,6 +35,7 @@ public readonly record struct SaveElementToActionArg (
 
 ) : IUiElementFunction, ISaveFunction<IUiElementFunction, AutomationElement?>;
 
+[Description("指定された値をAction用の引数として保存します。Custom.Fooでアクセス。")]
 public readonly record struct SaveProcessToActionArg (
 
     [property: Required] string Name,
@@ -49,13 +55,28 @@ file interface ISaveFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> whe
     {
         ctx.customArgs[this.Name] = src switch
         {
-            AutomationElement ele => ele.Properties,
+            AutomationElement ele => ISaveFunction<TFunc, TReturn>.ToDictonary(ele),
             _ => src
         };
 
         return Task.FromResult(src);
     }
 
+
+    private static IDictionary<string, object?> ToDictonary(AutomationElement ele)
+    {
+        var prop = ele.Properties;
+        var propType = prop.GetType();
+
+        IDictionary<string, object?> dict = propType.GetProperties()
+        .Where((p) => p.PropertyType.IsGenericType)
+        .Where((p) => p.PropertyType.GetGenericTypeDefinition() == typeof(AutomationProperty<>))
+        .Select((p) => (p.Name, (dynamic?)p.GetValue(prop)))
+        .ToDictionary((t) => t.Name, (t) => (object?) t.Item2?.ValueOrDefault)
+        ;
+
+        return dict;
+    }
 }
 
 
