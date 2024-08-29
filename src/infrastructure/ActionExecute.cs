@@ -18,7 +18,7 @@ public class ActionExecute : IActionExecutor
             return;
         }
 
-        System.Console.WriteLine(args.Custom["Test"]);
+        System.Console.WriteLine(args.Custom["Test"]); //デッドロック?
 
         string command;
         try

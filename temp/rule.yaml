@@ -23,5 +23,5 @@ Rules:
           Angle: 45
           Radius: 50
         Action:
-          CommandTemplate: "cmd /k \"{Custom.Test}\""
+          CommandTemplate: "cmd.exe \"{Custom.Test}\""
       

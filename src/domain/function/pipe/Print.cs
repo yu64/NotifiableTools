@@ -7,9 +7,13 @@ using SmartFormat.Extensions;
 
 namespace NotifiableTools;
 
+[Description("[副作用] 指定された値を標準出力に与える")]
 public readonly record struct Print (
 
-    [property: Nullable(true)] string Format,
+    [property: Nullable(true)] 
+    [property: Description("SmartFormat")] 
+    string Format,
+
     [property: Required] IAnyFunction Src
 
 ) : IFunctionPipe
