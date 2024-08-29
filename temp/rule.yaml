@@ -3,7 +3,7 @@
 Rules:
   - IntervalMilliseconds: 100
     Name: "ルールA"
-    Enable: true
+    Enable: false
     Condition:
       $type: IsExist
       Target: 
@@ -38,3 +38,31 @@ Rules:
           CanStdOut: true
           Encoding: UTF-8
       
+
+  - IntervalMilliseconds: 100
+    Enable: true
+    Condition:
+      $type: IsExist
+      Target:
+        $type: SaveElementToActionArg
+        Name: "Target"
+        Value:
+          $type: FilterAutomationId
+          Element:
+            $type: PrintElement
+            Value:
+              $type: GetFocusedElement
+          AutomationId:
+            $type: StringSymbol
+            Value: "FunctionsList"
+    Notions:
+      - $type: TextBox
+        DefaultText: ""
+        Position:
+          $type: MouseCircle
+          Angle: 0
+          Radius: 50
+        Action:
+          CommandTemplate: "cmd /k echo 対象:{Target.AutomationId}"
+          CanStdOut: false
+          Encoding: Shift_JIS
