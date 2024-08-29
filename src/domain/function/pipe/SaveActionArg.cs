@@ -76,7 +76,13 @@ file interface ISaveFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> whe
             .Where((p) => p.PropertyType.IsGenericType)
             .Where((p) => p.PropertyType.GetGenericTypeDefinition() == typeof(AutomationProperty<>))
             .Select((p) => (p.Name, (dynamic?)p.GetValue(prop)))
-            .ToDictionary((t) => t.Name, (t) => (object?) t.Item2?.ValueOrDefault)
+            .ToDictionary(
+                (t) => t.Name, 
+                (t) => ISaveFunction<TFunc, TReturn>.TryCatch(
+                    null, 
+                    () => (object?) t.Item2?.ValueOrDefault
+                )
+            )
             .ToImmutableDictionary()
             ;
 
@@ -85,6 +91,19 @@ file interface ISaveFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> whe
         catch(COMException)
         {
             return ImmutableDictionary.Create<string, object?>();
+        }
+    }
+
+
+    private static T TryCatch<T>(T alt, Func<T> func)
+    {
+        try
+        {
+            return func();
+        }
+        catch
+        {
+            return alt;
         }
     }
 }

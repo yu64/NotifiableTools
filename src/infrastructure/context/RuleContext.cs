@@ -40,9 +40,9 @@ public class RuleContext : IRuleContext
         this.localVariable[key] = value;
     }
 
-    public T GetVariable<T>(IAnyFunction key)
+    public T? GetVariable<T>(IAnyFunction key)
     {
-        return this.localVariable[key];
+        return this.localVariable.GetValueOrDefault(key);
     }
 
 

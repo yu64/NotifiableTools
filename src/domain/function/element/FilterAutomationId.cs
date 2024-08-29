@@ -10,9 +10,9 @@ namespace NotifiableTools;
 [method: JsonConstructor]
 public readonly record struct FilterAutomationId(
     
+    [property: Required] IStringFunction AutomationId,
     [property: Required] IUiElementFunction Element,
-    [property: Required] IStringFunction AutomationId
-
+    [property: Default(false)] bool CanExclude = false
 
 ) : IUiElementFunction
 {
@@ -27,7 +27,10 @@ public readonly record struct FilterAutomationId(
             return null;
         }
 
-        if(string.Equals(ele.Properties.AutomationId.ValueOrDefault, await this.AutomationId.Call(ctx)))
+        var right = !this.CanExclude;
+        var left = string.Equals(ele.Properties.AutomationId.ValueOrDefault, await this.AutomationId.Call(ctx));
+
+        if(left == right)
         {
             return ele;
         }

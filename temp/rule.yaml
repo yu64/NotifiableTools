@@ -42,29 +42,27 @@ Rules:
   - IntervalMilliseconds: 100
     Enable: true
     Condition:
-      $type: PrintBool
-      Value:
-        $type: Or
-        Left:
-          $type: IsExist
-          Target:
-            $type: SaveElementToActionArg
-            Name: "Target"
+      $type: IsExist
+      Target:
+        $type: SaveElementToActionArg
+        Name: "Target"
+        Value:
+          $type: FilterAutomationId
+          AutomationId:
+            $type: StringSymbol
+            Value: "RichEditBox"
+          Element:
+            $type: PrintElement
+            Format: "{0}"
             Value:
-              $type: FilterAutomationId
-              Element:
-                $type: GetFocusedElement
-              AutomationId:
-                $type: StringSymbol
-                Value: "FunctionsList"
-        Right:
-          $type: IsExist
-          Target:
-            $type: FilterProcess
-            Element:
-              $type: GetFocusedElement
-            Process:
-              $type: GetCurrentProcess
+              $type: IfNotPresentUsePrevElement
+              Value:
+                $type: FilterProcess
+                CanExclude: True
+                Element:
+                  $type: GetFocusedElement
+                Process:
+                  $type: GetCurrentProcess
       
 
     Notions:
@@ -75,6 +73,6 @@ Rules:
           Angle: 0
           Radius: 50
         Action:
-          CommandTemplate: "cmd /k echo 対象:{Target.AutomationId}"
+          CommandTemplate: "cmd /k echo 対象:{Custom.Target.AutomationId}"
           CanStdOut: false
           Encoding: Shift_JIS

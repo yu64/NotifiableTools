@@ -12,7 +12,8 @@ namespace NotifiableTools;
 public readonly record struct IsEqualsControlType(
     
     [property: Required] IUiElementFunction Element,
-    [property: Required] ControlType ControlType
+    [property: Required] ControlType ControlType,
+    [property: Default(false)] bool CanExclude = false
 
 
 ) : IUiElementFunction
@@ -28,7 +29,10 @@ public readonly record struct IsEqualsControlType(
             return null;
         }
 
-        if(ele.ControlType == this.ControlType)
+        var right = !this.CanExclude;
+        var left = ele.ControlType == this.ControlType;
+
+        if(left == right)
         {
             return ele;
         }

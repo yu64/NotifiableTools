@@ -41,7 +41,7 @@ file interface IBaseFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> whe
     {
         if(src == null)
         {
-            return Task.FromResult(ctx.GetVariable<TReturn>(this));
+            return Task.FromResult(ctx.GetVariable<TReturn>(this)!);
         }
 
         ctx.SetVariable(this, src);

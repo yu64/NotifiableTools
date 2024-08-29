@@ -10,6 +10,6 @@ public interface IRuleContext : IDisposable
     public T GetOrCreateDisposable<T>(Func<T> factory) where T : IDisposable;
 
     public void SetVariable(IAnyFunction key, object value);
-    public T GetVariable<T>(IAnyFunction key); 
+    public T? GetVariable<T>(IAnyFunction key); 
 
 }

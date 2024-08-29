@@ -11,7 +11,9 @@ namespace NotifiableTools;
 public readonly record struct FilterProcess(
     
     [property: Required] IUiElementFunction Element,
-    [property: Required] IProcessFunction Process
+    [property: Required] IProcessFunction Process,
+    [property: Default(false)] bool CanExclude = false
+
 
 
 ) : IUiElementFunction
@@ -27,12 +29,11 @@ public readonly record struct FilterProcess(
         }
 
         var process = await this.Process.Call(ctx);
-        if(process == null)
-        {
-            return null;
-        }
 
-        if(string.Equals(ele.Properties.ProcessId, process.Id))
+        var right = !this.CanExclude;
+        var left = ele.Properties.ProcessId == process?.Id;
+
+        if(left == right)
         {
             return ele;
         }
