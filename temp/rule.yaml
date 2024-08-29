@@ -2,56 +2,16 @@
 
 Rules:
   - IntervalMilliseconds: 100
-    Name: "ルールA"
-    Enable: false
-    Condition:
-      $type: IsExist
-      Target: 
-        $type: SaveElementToActionArg
-        Name: "Test"
-        Value:
-          $type: PrintElement
-          Value:
-            $type: GetFocusedElement
-
-        
-    Notions:
-      - $type: Button
-        Title: "実行A"
-        Position:
-          $type: MouseCircle
-          Angle: 45
-          Radius: 50
-        Action:
-          CommandTemplate: "cmd.exe /k echo \"%CD%\""
-          CanStdOut: true
-          Encoding: "Shift_JIS"
-
-      - $type: TextBox
-        DefaultText: "入力欄"
-        Position:
-          $type: MouseCircle
-          Angle: 180
-          Radius: 50 
-        Action:
-          CommandTemplate: "cmd.exe /k echo \"{InputText}\""
-          CanStdOut: true
-          Encoding: UTF-8
-      
-
-  - IntervalMilliseconds: 100
+    Name: "ルール"
     Enable: true
     Condition:
-      $type: IsExist
-      Target:
-        $type: SaveElementToActionArg
-        Name: "Target"
+      $type: Not
+      Value:
+        $type: IsChanged
         Value:
-          $type: FilterAutomationId
-          AutomationId:
-            $type: StringSymbol
-            Value: "RichEditBox"
-          Element:
+          $type: SaveElementToActionArg
+          Name: "Target"
+          Value:
             $type: PrintElement
             Format: "{0}"
             Value:
@@ -73,6 +33,6 @@ Rules:
           Angle: 0
           Radius: 50
         Action:
-          CommandTemplate: "cmd /k echo 対象:{Custom.Target.AutomationId}"
-          CanStdOut: false
+          CommandTemplate: "cmd /k echo 入力:{InputText} 対象:{Custom.Target.AutomationId}"
+          CanStdOut: true
           Encoding: Shift_JIS

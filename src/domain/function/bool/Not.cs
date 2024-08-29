@@ -7,18 +7,18 @@ namespace NotifiableTools;
 public readonly record struct Not : IBoolFunction
 {
     [Required]
-    public IBoolFunction Target { get; }
+    public IBoolFunction Value { get; }
 
 
     [JsonConstructor]
-    public Not(IBoolFunction target)
+    public Not(IBoolFunction value)
     {
-        Target = target;
+        Value = value;
     }
 
 
     public async Task<bool> Call(IRuleContext ctx)
     {
-        return !await Target.Call(ctx);
+        return !await Value.Call(ctx);
     }
 }

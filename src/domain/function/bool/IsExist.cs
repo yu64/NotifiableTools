@@ -8,19 +8,19 @@ namespace NotifiableTools;
 public readonly record struct IsExist : IBoolFunction
 {
     [Required]
-    public IAnyFunction Target { get; }
+    public IAnyFunction Value { get; }
 
     
 
     [JsonConstructor]
-    public IsExist(IAnyFunction target)
+    public IsExist(IAnyFunction value)
     {
-        Target = target;
+        Value = value;
     }
     
 
     public async Task<bool> Call(IRuleContext ctx)
     {   
-        return (await this.Target.CallDynamic<dynamic>(ctx)) != null;
+        return (await this.Value.CallDynamic<dynamic>(ctx)) != null;
     }
 }
