@@ -39,28 +39,31 @@ public readonly record struct PrintProcess(
 
 
 
-interface IPrintFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> where TFunc : IAnyFunction<TReturn>
+file interface IPrintFunction<TFunc, TReturn> : IAnyFunction<TReturn> where TFunc : IAnyFunction<TReturn>
 {
     public string Format { get; }
+    public TFunc Value { get; }
 
-    Task<TReturn> IPipeFunction<TFunc, TReturn>.CallPipe(IRuleContext ctx, TReturn src)
+    async Task<TReturn> IAnyFunction<TReturn>.Call(IRuleContext ctx)
     {
+        var src = await this.Value.CallDynamic<TReturn>(ctx);
+        
         if(String.IsNullOrWhiteSpace(this.Format))
         {
             System.Console.WriteLine(src);
-            return Task.FromResult(src);
+            return src;
         }
 
         try
         {
             var text = SmartFormatUtil.Format(this.Format, src);
             System.Console.WriteLine(text);
-            return Task.FromResult(src);
+            return src;
         }
         catch(Exception ex)
         {
             SmartFormatUtil.PrintErrorMessage(ex, this.Format, src);
-            return Task.FromResult(src);
+            return src;
         }
     }
 

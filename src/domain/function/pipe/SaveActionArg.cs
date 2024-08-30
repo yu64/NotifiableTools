@@ -49,19 +49,22 @@ public readonly record struct SaveProcessToActionArg (
 
 
 
-file interface ISaveFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> where TFunc : IAnyFunction<TReturn>
+file interface ISaveFunction<TFunc, TReturn> : IAnyFunction<TReturn> where TFunc : IAnyFunction<TReturn>
 {
     public string Name { get; }
+    public TFunc Value { get; }
 
-    Task<TReturn> IPipeFunction<TFunc, TReturn>.CallPipe(IRuleContext ctx, TReturn src)
+    async Task<TReturn> IAnyFunction<TReturn>.Call(IRuleContext ctx)
     {
+        var src = await this.Value.CallDynamic<TReturn>(ctx);
+
         ctx.customArgs[this.Name] = src switch
         {
             AutomationElement ele => ISaveFunction<TFunc, TReturn>.ToDictonary(ele),
             _ => src
         };
 
-        return Task.FromResult(src);
+        return src;
     }
 
 

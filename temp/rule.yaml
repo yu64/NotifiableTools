@@ -5,25 +5,62 @@ Rules:
     Name: "ルール"
     Enable: true
     Condition:
-      $type: Not
-      Value:
-        $type: IsChanged
-        Value:
-          $type: SaveElementToActionArg
-          Name: "Target"
-          Value:
-            $type: PrintElement
-            Format: "{0}"
+      $type: Block
+      BlockName: "テストブロック"
+      CanPrint: true
+      ResultName: "output"
+      Lines:
+        - Name: "focused"
+          Func:
+            $type: GetFocusedElement
+
+        - Name: "otherFocused"
+          Func:
+            $type: FilterProcess
+            CanExclude: true
+            Element:
+              $type: GetScopeValue
+              Name: "focused"
+            Process:
+              $type: GetCurrentProcess
+
+        - Name: "filledElement"
+          Func:
+            $type: IfNotPresentUsePrevElement
             Value:
-              $type: IfNotPresentUsePrevElement
-              Value:
-                $type: FilterProcess
-                CanExclude: True
-                Element:
-                  $type: GetFocusedElement
-                Process:
-                  $type: GetCurrentProcess
-      
+              $type: GetScopeValue
+              Name: "otherFocused"
+
+        - Name: "targetElement"
+          Func:
+            $type: FilterAutomationId
+            AutomationId:
+              $type: StringSymbol
+              Value: "15"
+            Element:
+              $type: GetScopeValue
+              Name: "filledElement"
+
+        - Name: "isChangeFocus"
+          Func:
+            $type: IsChanged
+            Value:
+              $type: GetScopeValue
+              Name: "targetElement"
+
+        - Name: "isNotChange"
+          Func:
+            $type: Not
+            Value:
+              $type: GetScopeValue
+              Name: "isChangeFocus"
+
+        - Name: "output"
+          Func:
+            $type: GetScopeValue
+            Name: "focused"
+        
+        
 
     Notions:
       - $type: TextBox

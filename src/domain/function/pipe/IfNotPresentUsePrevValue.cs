@@ -35,17 +35,21 @@ public readonly record struct IfNotPresentUsePrevProcess(
 
 
 
-file interface IBaseFunction<TFunc, TReturn> : IPipeFunction<TFunc, TReturn> where TFunc : IAnyFunction<TReturn>
+file interface IBaseFunction<TFunc, TReturn> : IAnyFunction<TReturn> where TFunc : IAnyFunction<TReturn>
 {
-    Task<TReturn> IPipeFunction<TFunc, TReturn>.CallPipe(IRuleContext ctx, TReturn src)
+    public TFunc Value { get; }
+
+    Task<TReturn> IAnyFunction<TReturn>.Call(IRuleContext ctx)
     {
+        var src = this.Value.CallDynamic<TReturn>(ctx);
+
         if(src == null)
         {
             return Task.FromResult(ctx.GetVariable<TReturn>(this)!);
         }
 
         ctx.SetVariable(this, src);
-        return Task.FromResult(src);
+        return src;
     }
 
 }
