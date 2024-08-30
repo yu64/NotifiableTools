@@ -36,3 +36,5 @@ Rules:
           CommandTemplate: "cmd /k echo 入力:{InputText} 対象:{Custom.Target.AutomationId}"
           CanStdOut: true
           Encoding: Shift_JIS
+
+  

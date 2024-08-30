@@ -23,6 +23,7 @@ public class RuleParser
             return Type.GetType($"{this.GetType().Namespace}.{typeName}");
         }
         
+        //System.Text.Json
         this.serializerOptions = new JsonSerializerOptions() 
         { 
             WriteIndented = true,
@@ -30,7 +31,8 @@ public class RuleParser
             PropertyNameCaseInsensitive = true,
             Converters = {
                 new SubTypeConverter<object>(GetTypeFromSimpleName),
-                new TextToBoolConverter()
+                new TextToBoolConverter(),
+                new JsonStringEnumConverter()
             }
         };
     }
