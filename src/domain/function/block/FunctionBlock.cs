@@ -6,7 +6,7 @@ namespace NotifiableTools;
 
 
 
-public readonly record struct Block(
+public readonly record struct FunctionBlock(
 
     string BlockName,
     bool CanPrint,
@@ -70,13 +70,13 @@ public readonly record struct Block(
         this.print<T>("EndBlock", "");
 
         var result = results.GetValueOrDefault(this.ResultName);
-        if(result is not T)
+        if(result != null && result is not T)
         {
             Console.Error.WriteLine($"[Block:{this.BlockName}] 戻り値は期待されている型と一致しません。ResultName:{this.ResultName} Expected:{typeof(T)} Actual:{result?.GetType()} Result:{result}");
             return this.print<T>("Return", $"=> (TypeMismatch) Result:{(T)default!}", default!);
         }
         
-        return this.print<T>("Return", $"=> Name:{this.ResultName} Result:{result}", (T)result);
+        return this.print<T>("Return", $"=> Name:{this.ResultName} Result:{result}", (T)result!);
     }
 
 
@@ -87,7 +87,7 @@ public readonly record struct Block(
             return output;
         }
 
-        System.Console.WriteLine($"[{nameof(Block)}:{this.BlockName}:{state}] {detail}");
+        System.Console.WriteLine($"[{nameof(FunctionBlock)}:{this.BlockName}:{state}] {detail}");
         return output;
     }
 
@@ -98,7 +98,7 @@ public readonly record struct Block(
             return output;
         }
 
-        System.Console.WriteLine($"[{nameof(Block)}:{this.BlockName}:{line.Name}:{state}] {detail}");
+        System.Console.WriteLine($"[{nameof(FunctionBlock)}:{this.BlockName}:{line.Name}:{state}] {detail}");
         return output;
     }
 

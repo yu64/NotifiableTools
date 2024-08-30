@@ -4,7 +4,7 @@ using NotifiableTools;
 
 namespace NotifiableTools;
 
-public readonly record struct GetScopeValue(
+public readonly record struct GetLocalValue(
 
     [property: Required] string Name,
     IAnyFunction Default
@@ -14,7 +14,7 @@ public readonly record struct GetScopeValue(
     public async Task<T> Call<T>(IRuleContext ctx)
     {
         var scope = ctx.GetScopes()
-        .Where((s) => s.OwnerType == typeof(Block))
+        .Where((s) => s.OwnerType == typeof(FunctionBlock))
         .FirstOrDefault();
 
         if(scope == null)

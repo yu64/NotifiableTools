@@ -5,60 +5,42 @@ Rules:
     Name: "ルール"
     Enable: true
     Condition:
-      $type: Block
+      $type: FunctionBlock
       BlockName: "テストブロック"
       CanPrint: true
       ResultName: "output"
       Lines:
-        - Name: "focused"
+        - Name: "test"
           Func:
-            $type: GetFocusedElement
+            $type: StringSymbol
+            Value: "文字列"
 
-        - Name: "otherFocused"
+        - Name: "inner"
           Func:
-            $type: FilterProcess
-            CanExclude: true
-            Element:
-              $type: GetScopeValue
-              Name: "focused"
-            Process:
-              $type: GetCurrentProcess
+            $type: FunctionBlock
+            BlockName: "インナーブロック"
+            CanPrint: true
+            ResultName: "output_inner"
+            Lines:
+              - Name: "ele"
+                Func:
+                  $type: GetFocusedElement
+              - Name: "value"
+                Func:
+                  $type: GetLocalValue
+                  Name: "test"
+              - Name: "output_inner"
+                Func:
+                  $type: GetLocalValue
+                  Name: "value"
 
-        - Name: "filledElement"
-          Func:
-            $type: IfNotPresentUsePrevElement
-            Value:
-              $type: GetScopeValue
-              Name: "otherFocused"
-
-        - Name: "targetElement"
-          Func:
-            $type: FilterAutomationId
-            AutomationId:
-              $type: StringSymbol
-              Value: "15"
-            Element:
-              $type: GetScopeValue
-              Name: "filledElement"
-
-        - Name: "isChangeFocus"
-          Func:
-            $type: IsChanged
-            Value:
-              $type: GetScopeValue
-              Name: "targetElement"
-
-        - Name: "isNotChange"
-          Func:
-            $type: Not
-            Value:
-              $type: GetScopeValue
-              Name: "isChangeFocus"
 
         - Name: "output"
           Func:
-            $type: GetScopeValue
-            Name: "focused"
+            $type: IsExist
+            Value:
+              $type: GetLocalValue
+              Name: "inner"
         
         
 
