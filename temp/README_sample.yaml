@@ -1,4 +1,9 @@
 # yaml-language-server: $schema=./schema.json
+
+# 上記は紐づける JSON Schema の定義。
+# VSCodeなら YAML Language Support by Red Hat 拡張機能と合わせて使うことを勧める
+# NotifiableTools.exe template コマンドで生成できる
+
 Rules:
   - IntervalMilliseconds: 100 # 条件の確認
     Enable: true # ルールが有効であるか
