@@ -68,9 +68,13 @@ public partial class TrayApp : System.Windows.Application
 
 
 
-    public IDisposable RegisterMenuItem(INotion notion, Action onSubmit)
+    public IDisposable RegisterMenuItem(Tray notion, Action<ActionDefinition> onSubmit)
     {
-        var item = this.menu!.Items.Add("項目", null, (sender, args) => onSubmit());
+        
+        var item = this.menu!.Items.Add("項目", null, (sender, args) => {
+            onSubmit(notion.Action);
+        });
+
         return new DisposableWrapper(() => this.menu.Items.Remove(item));
     }
 

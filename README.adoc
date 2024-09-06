@@ -4,5 +4,30 @@
 
 Ruleファイル(Yaml形式)に指定した条件を満たしたとき、UI要素を表示し、コマンドを実行するツール。
 
+## Ruleファイル サンプル
 
-
+[source, yaml]
+----
+# yaml-language-server: $schema=./schema.json
+Rules:
+  - IntervalMilliseconds: 100 # 100msごとに条件を確認する
+    Enable: true # ルールが有効であるか
+    Name: "ルール名" 
+    Condition: 
+      $type: IsKeyDown # キーが押されているか判定する関数
+      Keys:
+        - LeftShift # 判定するキーの組み合わせ
+        - LeftCtrl
+        - Space
+    Notions:
+      - $type: Button #条件を満たしたときに表示される要素
+        Title: "メモ帳を開く" # ボタンのテキスト
+        Position:
+          $type: MouseCircle # ボタンの位置
+          Angle: 0 # 上から360°
+          Radius: 50
+        Action:
+          CommandTemplate: "notepad" #実行するコマンド
+          CanStdOut: true
+          Encoding: Shift_JIS
+----

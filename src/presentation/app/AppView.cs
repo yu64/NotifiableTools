@@ -73,11 +73,12 @@ public class AppView
         );
 
 
+        // 読みにくい
         var ui = notion switch
         {
-            Button impl => new NotionButton(impl, () => this.controller.Execute(args with {Action = impl.Action})),
-            TextBox impl => new NotionTextBox(impl, (text) => this.controller.Execute(args with {Action = impl.Action, InputText = text})),
-            Tray impl => this.trayApp!.RegisterMenuItem(notion, () => this.controller.Execute(args with {Action = impl.Action})),
+            Button impl => new NotionButton(impl, (action) => this.controller.Execute(args with {Action = action})),
+            TextBox impl => new NotionTextBox(impl, (action, text) => this.controller.Execute(args with {Action = action, InputText = text})),
+            Tray impl => this.trayApp!.RegisterMenuItem(impl, (action) => this.controller.Execute(args with {Action = action})),
             Pipe impl => new DisposableWrapper(
                     () => this.controller.Execute(args with {Action = impl.StartAction}),
                     () => this.controller.Execute(args with {Action = impl.StopAction, Timing = Timing.Stop})

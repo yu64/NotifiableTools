@@ -14,7 +14,7 @@ public partial class NotionTextBox : Window, IDisposable
 {
     private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
-    public NotionTextBox(TextBox notion, Action<string> onSummit)
+    public NotionTextBox(TextBox notion, Action<ActionDefinition, string> onSummit)
     {
         //UI初期化時に、なぜかDateTime.Now関連でNullReferenceExceptionが投げられる
         //そのため、明示的に使用し、初期化する
@@ -26,7 +26,16 @@ public partial class NotionTextBox : Window, IDisposable
         //コントロール初期設定
         this.ContentTextBox.Visibility = Visibility.Visible;
         this.ContentTextBox.Text = notion.DefaultText;
-        this.ContentTextBox.KeyDown += (sender, args) => {if(args.Key == Key.Enter) onSummit(this.ContentTextBox.Text);};
+        this.ContentTextBox.PreviewKeyDown += (sender, args) => {
+            
+            if( !(args.Key == Key.Enter) )
+            {
+                return;
+            }
+            
+            onSummit(notion.Action, this.ContentTextBox.Text);
+            this.Hide();
+        };
 
         this.setWindowLocation(notion.Position);
 

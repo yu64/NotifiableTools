@@ -1,59 +1,23 @@
 # yaml-language-server: $schema=./schema.json
-
 Rules:
   - IntervalMilliseconds: 100
-    Name: "ルール"
     Enable: true
+    Name: "ルール名"
     Condition:
-      $type: FunctionBlock
-      BlockName: "テストブロック"
-      CanPrint: true
-      ResultName: "output"
-      Lines:
-        - Name: "test"
-          Func:
-            $type: StringSymbol
-            Value: "文字列"
-
-        - Name: "inner"
-          Func:
-            $type: FunctionBlock
-            BlockName: "インナーブロック"
-            CanPrint: true
-            ResultName: "output_inner"
-            Lines:
-              - Name: "ele"
-                Func:
-                  $type: GetFocusedElement
-              - Name: "value"
-                Func:
-                  $type: GetLocalValue
-                  Name: "test"
-              - Name: "output_inner"
-                Func:
-                  $type: GetLocalValue
-                  Name: "value"
-
-
-        - Name: "output"
-          Func:
-            $type: IsExist
-            Value:
-              $type: GetLocalValue
-              Name: "inner"
-        
-        
-
+      $type: IsKeyDown
+      Keys:
+        - LeftShift
+        - LeftCtrl
+        - Space
     Notions:
-      - $type: TextBox
-        DefaultText: ""
+      - $type: Button
+        Title: "メモ帳を開く"
         Position:
           $type: MouseCircle
           Angle: 0
           Radius: 50
         Action:
-          CommandTemplate: "cmd /k echo 入力:{InputText} 対象:{Custom.Target.AutomationId}"
+          CommandTemplate: "notepad"
           CanStdOut: true
           Encoding: Shift_JIS
-
   
