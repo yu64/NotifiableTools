@@ -2,32 +2,56 @@
 
 ## 概要
 
-Ruleファイル(Yaml形式)に指定した条件を満たしたとき、UI要素を表示し、コマンドを実行するツール。
+Ruleファイル(Yaml形式)に指定した条件を満たしたとき、UI要素を表示し、コマンドを実行するWindowsツール。
+
+## コマンド
+
+`NotifiableTools template [OutputPath]`::
+  RuleファイルのJSON Schemaを出力する。
+
+`NotifiableTools start <RuleFile1>...`::
+  指定されたRuleファイルを結合して読み込み、常駐する。 +
+  タスクトレイから停止できる。
 
 ## Ruleファイル サンプル
 
 [source, yaml]
 ----
 # yaml-language-server: $schema=./schema.json
+
+# 上記は紐づける JSON Schema の定義。
+# VSCodeなら YAML Language Support by Red Hat 拡張機能と合わせて使うことを勧める
+# NotifiableTools.exe template コマンドで生成できる
+
 Rules:
-  - IntervalMilliseconds: 100 # 100msごとに条件を確認する
+  - IntervalMilliseconds: 100 # 条件の確認
     Enable: true # ルールが有効であるか
-    Name: "ルール名" 
-    Condition: 
-      $type: IsKeyDown # キーが押されているか判定する関数
-      Keys:
-        - LeftShift # 判定するキーの組み合わせ
-        - LeftCtrl
-        - Space
+    Name: "ルール名"
+    Condition:
+      $type: Toggle # trueが入力されたとき、出力を切り替える(true => false, false => true)
+      CanToggle:
+        $type: IsChangedToBool #「入力がtrueに変化したとき」(=キーを押したとき)を検出
+        ToValue: true
+        Value:
+          $type: IsKeyDown #「キーを押しているか」を検出
+          Keys:
+            - LeftShift # Shift + Ctrl + Space の同時押し
+            - LeftCtrl
+            - Space
     Notions:
-      - $type: Button #条件を満たしたときに表示される要素
-        Title: "メモ帳を開く" # ボタンのテキスト
+      - $type: Button # 条件を満たしたとき表示されるUI要素
+        Title: "メモ帳を開く" 
         Position:
-          $type: MouseCircle # ボタンの位置
-          Angle: 0 # 上から360°
+          $type: MouseCircle # マウスカーソルの位置と角度、半径から表示位置を決める
+          Angle: 0
           Radius: 50
         Action:
-          CommandTemplate: "notepad" #実行するコマンド
+          CommandTemplate: "notepad" # 実行するコマンド
           CanStdOut: true
           Encoding: Shift_JIS
+  
 ----
+
+## 代替
+
+ショートカットキーから任意のアプリを呼び出したいなら、 https://github.com/microsoft/PowerToys[PowerToys] の https://learn.microsoft.com/ja-jp/windows/powertoys/keyboard-manager#remap-a-shortcut-to-start-an-app[Keyboard Manager] をおすすめする。

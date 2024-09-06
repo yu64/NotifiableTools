@@ -23,11 +23,11 @@ Rules:
       - $type: Button # 条件を満たしたとき表示されるUI要素
         Title: "メモ帳を開く" 
         Position:
-          $type: MouseCircle #マウスカーソルの位置と角度、半径から表示位置を決める
+          $type: MouseCircle # マウスカーソルの位置と角度、半径から表示位置を決める
           Angle: 0
           Radius: 50
         Action:
-          CommandTemplate: "notepad" #実行するコマンド
+          CommandTemplate: "notepad" # 実行するコマンド
           CanStdOut: true
           Encoding: Shift_JIS
   
